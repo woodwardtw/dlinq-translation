@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
     $content = get_field($field);
     $content_array = str_replace(array('<br>', '<br/>', '<br />'), "\n", $content);
     $content_array = explode("\n", $content_array);
-    write_log($content_array);
+    //write_log($content_array);
     $html = "";
     foreach ($content_array as $key => $line) {
         if($line != "\r"){
