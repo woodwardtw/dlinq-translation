@@ -8,7 +8,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-	function dlinq_translation($field) {
+function dlinq_translation($field) {
     $content = get_field($field);
     $content_array = str_replace(array('<br>', '<br/>', '<br />'), "\n", $content);
     $content_array = explode("\n", $content_array);
@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
     $html = "";
     foreach ($content_array as $key => $line) {
         if($line != "\r"){
+        	$line = dlinq_translation_highlights($line);
         	$html .= "<div class='line' data-line='{$key}'>{$line}</div>";	
         } else {
         	$html .= "<br>";
@@ -25,6 +26,31 @@ defined( 'ABSPATH' ) || exit;
     return $html;
 }
 	
+
+function dlinq_translation_highlights($line){
+	if (have_rows('highlight_words')):
+
+	    // Loop through rows.
+	    while (have_rows('highlight_words')) : the_row();
+
+	        // Load sub field value.
+	        $word = get_sub_field('word');
+	        $color = get_sub_field('color');
+	        $words_array = explode(',', $word);
+
+	        foreach ($words_array as $key => $replace) {
+	        	$replace = trim($replace); // optional, clean whitespace
+	        	$line = str_replace($replace, "<span style='background-color:{$color}'>{$replace}</span>", $line);
+	        }
+
+	    endwhile;
+
+	endif;
+
+	return $line;
+}
+
+
 
 	//translation custom post type
 	
