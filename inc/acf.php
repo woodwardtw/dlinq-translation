@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit;
     write_log($content_array);
     $html = "";
     foreach ($content_array as $key => $line) {
-   		write_log(visualize_invisible_chars($line));
         if($line != "\r"){
         	$html .= "<div class='line' data-line='{$key}'>{$line}</div>";	
         } else {
