@@ -1,0 +1,90 @@
+// This is an empty scss file for your custom styles - Please add your super duper awesome mega design styles here
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap');
+
+body {
+  background: rgba(255,254,247,1);
+  color: rgba(27,45,64,1);
+}
+
+h1{
+  margin: 50px;
+  font-family: "Cormorant Garamond", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 4rem;
+}
+
+.container-fluid {
+  margin-bottom: 200px;
+}
+.text-box {
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid black;  
+}
+
+.highlight {
+  background-color: yellow;
+}
+
+.verb {
+  background-color: aqua;
+}
+
+.tools {
+  background-color: #efefef;
+  padding: 20px;
+}
+
+.num {
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+ .line {
+    display: block;
+    line-height: 1.5rem;
+    counter-increment: line;
+    
+}
+
+.translated .line:before {
+      
+      content: counter(line);
+      display: inline-block;
+      border-right: 1px solid #ddd;
+      padding: 0 .5em;
+      margin-right: .5em;
+      color: #888;
+      width: 30px;
+}
+
+.original .line:after {
+      
+      content: counter(line);
+      display: inline-block;
+      border-left: 1px solid #ddd;
+      padding: 0 .5em;
+      margin-left: .5em;
+      color: #888;
+      width: 30px;
+
+}
+
+.line {
+  padding: 5px;
+  transition: background-color 0.2s ease;
+}
+
+/* Create the hover effect using attribute selectors */
+.line:hover,
+.line:hover ~ div [data-line="-1"] {
+  background-color: #ffeb3b; /* Light yellow highlight */
+  cursor: pointer;
+}
+
+.original .line{
+  text-align: right;
+}
