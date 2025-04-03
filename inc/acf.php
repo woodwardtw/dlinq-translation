@@ -65,7 +65,11 @@ function dlinq_translation_legend(){
 	        $meaning = get_sub_field('meaning');
 	        $color = get_sub_field('color');
 	        $html .= "
-	        	<div class='def'><div class='def-color' style='background-color: {$color}'></div> {$word}: {$meaning}</div>
+	        	<div class='def'>
+	        		<div class='def-color' style='background-color: {$color}'>	        		
+	        		</div>
+	        		<div class='def-label'>{$word}: {$meaning}</div>
+	        	</div>
 	        ";
 
 	    endwhile;

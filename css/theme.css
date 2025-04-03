@@ -15443,4 +15443,28 @@ h1, .h1 {
   text-align: right;
 }
 
+.def-box {
+  border: 1px solid;
+  padding: 10px;
+  width: 350px;
+}
+
+.def {
+  margin: 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.def-color {
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+
+.def-label {
+  display: inline-block;
+  line-height: 20px;
+}
+
 /*# sourceMappingURL=theme.css.map */
