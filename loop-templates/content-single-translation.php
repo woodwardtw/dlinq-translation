@@ -30,6 +30,9 @@ defined( 'ABSPATH' ) || exit;
 	<!--translation display-->
 		<div class="container-fluid">
   			<div class="row">
+  				<div class="col-md-12">
+  					<?php echo dlinq_translation_legend();?>
+  				</div>
   				<div class="col-md-6">
       				<div class="original text-box">
       					<?php echo dlinq_translation('original_text');?>

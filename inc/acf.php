@@ -53,6 +53,27 @@ function dlinq_translation_highlights($line){
 	return $line;
 }
 
+function dlinq_translation_legend(){
+	if (have_rows('highlight_words')):
+
+	    // Loop through rows.
+	    $html = "";
+	    while (have_rows('highlight_words')) : the_row();
+
+	        // Load sub field value.
+	        $word = get_sub_field('word');
+	        $meaning = get_sub_field('meaning');
+	        $color = get_sub_field('color');
+	        $html .= "
+	        	<div class='def'><div class='def-color' style='background-color: {$color}'></div> {$word}: {$meaning}</div>
+	        ";
+
+	    endwhile;
+
+	endif;
+	return "<div class='def-box'>{$html}</div>";
+
+}
 
 
 
