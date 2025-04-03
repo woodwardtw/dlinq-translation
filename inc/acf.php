@@ -14,15 +14,18 @@ function dlinq_translation($field) {
     $content_array = explode("\n", $content_array);
     //write_log($content_array);
     $html = "";
-    foreach ($content_array as $key => $line) {
+    $counter = 1;
+    foreach ($content_array as $line) {
         if($line != "\r"){
-        	$line = dlinq_translation_highlights($line);
-        	$html .= "<div class='line' data-line='{$key}'>{$line}</div>";	
+            $line = dlinq_translation_highlights($line);
+            $html .= "<div class='line' data-line='{$counter}'>{$line}</div>";
+            $counter++;
         } else {
-        	$html .= "<br>";
+            $html .= "<br>";
+            // Don't increment counter for blank lines
         }
-        
     }
+
     return $html;
 }
 	
@@ -49,6 +52,8 @@ function dlinq_translation_highlights($line){
 
 	return $line;
 }
+
+
 
 
 
