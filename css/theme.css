@@ -15446,13 +15446,13 @@ h1, .h1 {
 .def-box {
   border: 1px solid;
   padding: 10px;
-  width: 350px;
+  max-width: 650px;
 }
 
 .def {
   margin: 10px 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: no-wrap;
   gap: 15px;
 }
 
@@ -15460,11 +15460,13 @@ h1, .h1 {
   width: 25px;
   height: 25px;
   display: inline-block;
+  flex: 1;
 }
 
 .def-label {
   display: inline-block;
   line-height: 20px;
+  flex: 19;
 }
 
 /*# sourceMappingURL=theme.css.map */

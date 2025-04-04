@@ -68,7 +68,7 @@ function dlinq_translation_legend(){
 	        	<div class='def'>
 	        		<div class='def-color' style='background-color: {$color}'>	        		
 	        		</div>
-	        		<div class='def-label'>{$word}: {$meaning}</div>
+	        		<div class='def-label'><strong>{$word}</strong>: {$meaning}</div>
 	        	</div>
 	        ";
 
