@@ -73,10 +73,9 @@ function dlinq_translation_legend(){
 	        ";
 
 	    endwhile;
-
+		return "<div class='def-box'>{$html}</div>";
 	endif;
-	return "<div class='def-box'>{$html}</div>";
-
+	return "";
 }
 
 
