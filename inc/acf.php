@@ -79,8 +79,6 @@ function dlinq_translation_legend(){
 }
 
 
-
-
 	//translation custom post type
 	
 	// Register Custom Post Type translation

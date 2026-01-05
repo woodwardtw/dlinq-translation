@@ -15414,7 +15414,8 @@ h1, .h1 {
   padding: 0 0.5em;
   margin-right: 0.5em;
   color: #888;
-  width: 30px;
+  width: 45px;
+  text-align: right;
 }
 
 .original .line:after {
@@ -15424,7 +15425,8 @@ h1, .h1 {
   padding: 0 0.5em;
   margin-left: 0.5em;
   color: #888;
-  width: 30px;
+  width: 45px;
+  text-align: left;
 }
 
 .line {
