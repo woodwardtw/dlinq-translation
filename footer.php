@@ -26,8 +26,15 @@ $container = get_theme_mod( 'understrap_container_type' );
 				<footer class="site-footer" id="colophon">
 
 					<div class="site-info">
-
-						<?php understrap_site_info(); ?>
+						<?php
+						if ( ! is_user_logged_in() ) {
+							?>
+							<a href="<?php echo esc_url( wp_login_url( get_permalink() ) ); ?>" class="btn btn-primary">
+								<?php esc_html_e( 'Login', 'dlinq-translation' ); ?>
+							</a>
+							<?php
+						}
+						?>
 
 					</div><!-- .site-info -->
 
