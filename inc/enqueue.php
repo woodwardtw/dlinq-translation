@@ -78,4 +78,5 @@ if ( ! function_exists( 'understrap_offcanvas_admin_bar_inline_styles' ) ) {
 add_action( 'admin_enqueue_scripts', 'load_translation_admin_style' );
 function load_translation_admin_style() {
     wp_enqueue_style( 'admin-trans-css', get_template_directory_uri() . '/css/admin-trans.css', array(), '1.0' );
+    wp_enqueue_script( 'acf-scroll-sync', get_template_directory_uri() . '/js/acf-scroll-sync.js', array(), '1.0', true );
 }
