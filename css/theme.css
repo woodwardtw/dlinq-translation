@@ -15373,7 +15373,7 @@ h1, .h1 {
   font-size: 4rem;
 }
 
-.container-fluid, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
+#single-wrapper .container-fluid, #single-wrapper .container-sm, #single-wrapper .container-md, #single-wrapper .container-lg, #single-wrapper .container-xl, #single-wrapper .container-xxl {
   margin-bottom: 200px;
 }
 
