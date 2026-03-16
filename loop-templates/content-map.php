@@ -39,7 +39,10 @@ defined( 'ABSPATH' ) || exit;
 					let name = location.title.rendered || ( location.title && location.title.rendered ) || 'Location';
 					L.marker( [ lat, lng ] )
 						.addTo( map )
-						.bindPopup( '<h3>' + name + '</h3><div>' + location.acf.english_name + '</div>' );
+						.bindPopup( `<h3>${name}</h3>
+                                    <div>${location.acf.english_name}</div>
+                                    <div><a href="${location.acf.text_link.permalink}?lines=${location.acf.text_lines}">See the location in the story context.</a></div>
+                                    ` );
 				} );
 			}
 
@@ -70,6 +73,8 @@ defined( 'ABSPATH' ) || exit;
 				fetchPage( map, 1 );
 			} );
 		} )();
+
+        
 		</script>
 
 		<?php

@@ -184,6 +184,39 @@ function create_location_cpt() {
 	add_action( 'init', 'create_location_cpt', 0 );	
 
 
+// Resolve text_link post_object to a full object in the REST API response.
+add_filter( 'rest_prepare_location', 'dlinq_location_rest_text_link', 10, 3 );
+function dlinq_location_rest_text_link( $response, $post, $request ) {
+	$data = $response->get_data();
+
+	if ( empty( $data['acf']['text_link'] ) ) {
+		return $response;
+	}
+
+	$linked = $data['acf']['text_link'];
+
+	// ACF may return an ID (int) or a WP_Post-shaped array depending on version.
+	$post_id = is_array( $linked ) ? ( $linked['ID'] ?? null ) : ( is_numeric( $linked ) ? (int) $linked : null );
+
+	if ( ! $post_id ) {
+		return $response;
+	}
+
+	$linked_post = get_post( $post_id );
+	if ( ! $linked_post ) {
+		return $response;
+	}
+
+	$data['acf']['text_link'] = array(
+		'ID'         => $linked_post->ID,
+		'post_title' => $linked_post->post_title,
+		'permalink'  => get_permalink( $linked_post->ID ),
+	);
+
+	$response->set_data( $data );
+	return $response;
+}
+
 	//save acf json
 add_filter('acf/settings/save_json', 'trans_json_save_point');
 	
