@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
 					let acf = location.acf || {};
 					let lat = parseFloat( acf.latitude );
 					let lng = parseFloat( acf.longitude );
-                    let text_lines = encodeURIComponent( location.acf.text_lines );
+                    let text_lines = encodeURIComponent(location.acf.text_lines.replace(/\s+/g, ''));
 					if ( isNaN( lat ) || isNaN( lng ) ) {
 						return;
 					}
