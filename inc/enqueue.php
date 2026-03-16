@@ -80,3 +80,23 @@ function load_translation_admin_style() {
     wp_enqueue_style( 'admin-trans-css', get_template_directory_uri() . '/css/admin-trans.css', array(), '1.0' );
     wp_enqueue_script( 'acf-scroll-sync', get_template_directory_uri() . '/js/acf-scroll-sync.js', array(), '1.0', true );
 }
+
+add_action( 'wp_enqueue_scripts', 'dlinq_map_scripts' );
+function dlinq_map_scripts() {
+    if ( ! is_page_template( 'page-templates/mappage.php' ) ) {
+        return;
+    }
+    wp_enqueue_style(
+        'leaflet',
+        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+        array(),
+        '1.9.4'
+    );
+    wp_enqueue_script(
+        'leaflet',
+        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+        array(),
+        '1.9.4',
+        false // load in <head> so it is available to inline template scripts
+    );
+}
