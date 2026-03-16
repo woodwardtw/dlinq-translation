@@ -145,35 +145,74 @@ function dlinq_translation_legend(){
 	}
 	add_action( 'init', 'create_translation_cpt', 0 );
 
+function create_location_cpt() {
+	
+	  $labels = array(
+	    'name' => __( 'Locations', 'Post Type General Name', 'textdomain' ),
+	    'singular_name' => __( 'Location', 'Post Type Singular Name', 'textdomain' ),
+	    'menu_name' => __( 'Locations', 'textdomain' ),
+	    'name_admin_bar' => __( 'Location', 'textdomain' ),
+	  );
+	  $args = array(
+	    'label' => __( 'location', 'textdomain' ),
+	    'description' => __( '', 'textdomain' ),
+	    'labels' => $labels,
+	    'menu_icon' => '',
+	    'supports' => array('title', 'editor', 'revisions', 'author', 'trackbacks', 'custom-fields',),
+	    'taxonomies' => array('category', 'post_tag'),
+	    'public' => true,
+	    'show_ui' => true,
+	    'show_in_menu' => true,
+	    'menu_position' => 5,
+	    'show_in_admin_bar' => true,
+	    'show_in_nav_menus' => true,
+	    'can_export' => true,
+	    'has_archive' => true,
+	    'hierarchical' => false,
+	    'exclude_from_search' => false,
+	    'show_in_rest' => true,
+	    'publicly_queryable' => true,
+	    'capability_type' => 'post',
+		'menu_icon' => 'dashicons-location-alt',
+	  );
+	  register_post_type( 'location', $args );
+	  
+	  // flush rewrite rules because we changed the permalink structure
+	  global $wp_rewrite;
+	  $wp_rewrite->flush_rules();
+	}
+	add_action( 'init', 'create_location_cpt', 0 );	
+
+
 	//save acf json
-		add_filter('acf/settings/save_json', 'trans_json_save_point');
-		 
-		function trans_json_save_point( $path ) {
-		    
-		    // update path
-		    $path = get_stylesheet_directory() . '/acf-json'; //replace w get_stylesheet_directory() for theme
-		    
-		    
-		    // return
-		    return $path;
-		    
-		}
+add_filter('acf/settings/save_json', 'trans_json_save_point');
+	
+function trans_json_save_point( $path ) {
+	
+	// update path
+	$path = get_stylesheet_directory() . '/acf-json'; //replace w get_stylesheet_directory() for theme
+	
+	
+	// return
+	return $path;
+	
+}
 
 
-		// load acf json
-		add_filter('acf/settings/load_json', 'trans_json_load_point');
+// load acf json
+add_filter('acf/settings/load_json', 'trans_json_load_point');
 
-		function trans_json_load_point( $paths ) {
-		    
-		    // remove original path (optional)
-		    unset($paths[0]);
-		    
-		    
-		    // append path
-		    $paths[] = get_stylesheet_directory() . '/acf-json';//replace w get_stylesheet_directory() for theme
-		    
-		    
-		    // return
-		    return $paths;
-		    
-		}
+function trans_json_load_point( $paths ) {
+	
+	// remove original path (optional)
+	unset($paths[0]);
+	
+	
+	// append path
+	$paths[] = get_stylesheet_directory() . '/acf-json';//replace w get_stylesheet_directory() for theme
+	
+	
+	// return
+	return $paths;
+	
+}
