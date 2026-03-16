@@ -152,6 +152,15 @@ function create_location_cpt() {
 	    'singular_name' => __( 'Location', 'Post Type Singular Name', 'textdomain' ),
 	    'menu_name' => __( 'Locations', 'textdomain' ),
 	    'name_admin_bar' => __( 'Location', 'textdomain' ),
+		 'all_items' => __( 'All Locations', 'textdomain' ),
+	    'add_new_item' => __( 'Add New Location', 'textdomain' ),
+	    'add_new' => __( 'Add New', 'textdomain' ),
+	    'new_item' => __( 'New Location', 'textdomain' ),
+	    'edit_item' => __( 'Edit Location', 'textdomain' ),
+	    'update_item' => __( 'Update Location', 'textdomain' ),
+	    'view_item' => __( 'View Location', 'textdomain' ),
+	    'view_items' => __( 'View Locations', 'textdomain' ),
+	    'search_items' => __( 'Search Locations', 'textdomain' ),
 	  );
 	  $args = array(
 	    'label' => __( 'location', 'textdomain' ),

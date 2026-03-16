@@ -33,6 +33,7 @@ defined( 'ABSPATH' ) || exit;
 					let acf = location.acf || {};
 					let lat = parseFloat( acf.latitude );
 					let lng = parseFloat( acf.longitude );
+                    let text_lines = encodeURIComponent( location.acf.text_lines );
 					if ( isNaN( lat ) || isNaN( lng ) ) {
 						return;
 					}
@@ -41,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
 						.addTo( map )
 						.bindPopup( `<h3>${name}</h3>
                                     <div>${location.acf.english_name}</div>
-                                    <div><a href="${location.acf.text_link.permalink}?lines=${location.acf.text_lines}">See the location in the story context.</a></div>
+                                    <div><a href="${location.acf.text_link.permalink}?lines=${text_lines}">See the location in the story context.</a></div>
                                     ` );
 				} );
 			}
