@@ -226,6 +226,27 @@ function dlinq_location_rest_text_link( $response, $post, $request ) {
 	return $response;
 }
 
+// Show audio player in editor when audio_file has a value.
+add_action( 'acf/render_field/name=audio_file', 'dlinq_render_audio_player_in_editor' );
+function dlinq_render_audio_player_in_editor( $field ) {
+	if ( empty( $field['value'] ) ) {
+		return;
+	}
+
+	$file = $field['value'];
+	$url  = is_array( $file ) ? ( $file['url'] ?? '' ) : wp_get_attachment_url( $file );
+
+	if ( ! $url ) {
+		return;
+	}
+
+	echo '<div class="acf-audio-preview" style="margin-top: 8px;">';
+	echo '<audio controls style="width: 100%; max-width: 500px;">';
+	echo '<source src="' . esc_url( $url ) . '">';
+	echo '</audio>';
+	echo '</div>';
+}
+
 	//save acf json
 add_filter('acf/settings/save_json', 'trans_json_save_point');
 	

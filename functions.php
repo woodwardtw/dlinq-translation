@@ -71,3 +71,6 @@ function dlinq_translation_index(){
 
 /** @phpstan-ignore-next-line */
 add_shortcode('list-translations', 'dlinq_translation_index');
+
+
+

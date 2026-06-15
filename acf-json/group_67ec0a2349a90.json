@@ -134,9 +134,33 @@
                     "enable_opacity": 0,
                     "return_format": "string",
                     "allow_in_bindings": 0,
-                    "parent_repeater": "field_67ed566fcd8f6"
+                    "parent_repeater": "field_67ed566fcd8f6",
+                    "custom_palette_source": "",
+                    "palette_colors": "",
+                    "show_color_wheel": true
                 }
             ]
+        },
+        {
+            "key": "field_6a3053ec41c56",
+            "label": "Audio file",
+            "name": "audio_file",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": "",
+            "allow_in_bindings": 0
         }
     ],
     "location": [
@@ -164,5 +188,8 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1743607526
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1781552126
 }
