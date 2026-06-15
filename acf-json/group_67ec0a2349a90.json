@@ -47,6 +47,27 @@
             "new_lines": ""
         },
         {
+            "key": "field_6a3053ec41c56",
+            "label": "Audio file",
+            "name": "audio_file",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": "",
+            "allow_in_bindings": 0
+        },
+        {
             "key": "field_67ed566fcd8f6",
             "label": "Highlight words",
             "name": "highlight_words",
@@ -140,27 +161,6 @@
                     "show_color_wheel": true
                 }
             ]
-        },
-        {
-            "key": "field_6a3053ec41c56",
-            "label": "Audio file",
-            "name": "audio_file",
-            "aria-label": "",
-            "type": "file",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "return_format": "url",
-            "library": "all",
-            "min_size": "",
-            "max_size": "",
-            "mime_types": "",
-            "allow_in_bindings": 0
         }
     ],
     "location": [
@@ -191,5 +191,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1781552126
+    "modified": 1781552592
 }
