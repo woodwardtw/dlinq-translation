@@ -15471,4 +15471,14 @@ h1, .h1 {
   flex: 19;
 }
 
+#translation-search {
+  position: fixed;
+  right: 0;
+  z-index: 10000;
+  top: 20px;
+  background-color: #efefef;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
 /*# sourceMappingURL=theme.css.map */

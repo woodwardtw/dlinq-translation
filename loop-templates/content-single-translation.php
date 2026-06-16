@@ -22,8 +22,10 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="translation-search mt-2" id="translation-search">
 			<div class="input-group">
-				<input type="search" id="translation-search-input" class="form-control" placeholder="Search text…" aria-label="Search translation text">
+				<input type="search" id="translation-search-input" class="form-control" placeholder="Search this story . . . " aria-label="Search translation text">
 				<span class="input-group-text" id="translation-search-count" aria-live="polite"></span>
+				<button data-search="next">&darr;</button>
+  				<button data-search="prev">&uarr;</button>
 				<button class="btn btn-outline-secondary" type="button" id="translation-search-clear" aria-label="Clear search">&#x2715;</button>
 			</div>
 		</div>

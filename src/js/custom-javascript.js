@@ -1,43 +1,5 @@
 // Add your JS customizations here
 
-// Mark.js text search for single translation pages
-(function () {
-	const searchInput = document.getElementById('translation-search-input');
-	const searchCount = document.getElementById('translation-search-count');
-	const searchClear = document.getElementById('translation-search-clear');
-
-	if (!searchInput || typeof Mark === 'undefined') return;
-
-	const markInstance = new Mark(document.querySelectorAll('.text-box'));
-
-	function doSearch() {
-		const term = searchInput.value.trim();
-		markInstance.unmark({
-			done: function () {
-				if (!term) {
-					searchCount.textContent = '';
-					return;
-				}
-				markInstance.mark(term, {
-					separateWordSearch: false,
-					done: function (count) {
-						searchCount.textContent = count > 0 ? count + ' found' : 'none';
-					},
-				});
-			},
-		});
-	}
-
-	searchInput.addEventListener('input', doSearch);
-
-	searchClear.addEventListener('click', function () {
-		searchInput.value = '';
-		markInstance.unmark();
-		searchCount.textContent = '';
-	});
-})();
-
-
 if(document.querySelectorAll('.line')){
 	const allLines = document.querySelectorAll('.line');
 
