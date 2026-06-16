@@ -1,11 +1,28 @@
-.acf-field-67ec0a23a86b4{
-	background-color: #efefef;
-}
-.acf-field-67ec0a23a86b4, .acf-field-67ec0a23a86b4 textarea {
-	text-align: right;
+.acf-field-67ec0a23a86b4 {
+  background-color: #efefef;
 }
 
-.acf-field-67ec0a23a86b4, .acf-field-67ec0a3fa86b5 {
-	font-size: 1.2rem;
+.acf-field-67ec0a23a86b4,
+.acf-field-67ec0a23a86b4 textarea {
+  text-align: right;
 }
+
+.acf-field-67ec0a23a86b4,
+.acf-field-67ec0a3fa86b5 {
+  font-size: 1.2rem;
+}
+
+.acf-audio-preview {
+  position: fixed !important;
+  right: 16px;
+  bottom: 16px;
+  z-index: 100000;
+  background-color: #efefef;
+  padding: 10px;
+  border: 2px solid #151414;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: 300px;
+}
+
 /*# sourceMappingURL=admin-trans.css.map */

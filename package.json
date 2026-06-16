@@ -6,7 +6,7 @@
   "scripts": {
     "bs": "browser-sync start --config src/build/browser-sync.config.js",
     "css": "npm-run-all css-compile css-postcss css-minify",
-    "css-compile": "sass --style expanded --source-map --embed-sources --no-error-css --quiet src/sass/theme.scss:css/theme.css src/sass/custom-editor-style.scss:css/custom-editor-style.css",
+    "css-compile": "sass --style expanded --source-map --embed-sources --no-error-css --quiet src/sass/theme.scss:css/theme.css src/sass/custom-editor-style.scss:css/custom-editor-style.css src/sass/admin-trans.scss:css/admin-trans.css",
     "css-minify": "cleancss -O1 --format breakWith=lf --with-rebase --source-map --source-map-inline-sources --output css/ --batch --batch-suffix \".min\" \"css/*.css\" \"!css/*.min.css\" \"!css/*rtl*.css\" \"!css/*-bootstrap4.css\"",
     "css-postcss": "postcss --config src/build/postcss.config.js --replace \"css/*.css\" \"!css/*.rtl*.css\" \"!css/*.min.css\" \"!css/*-bootstrap4.css\"",
     "css-bs4": "npm-run-all css-compile-bs4 css-postcss-bs4 css-minify-bs4",
