@@ -93,70 +93,13 @@ function dlinq_markjs_scripts() {
         '8.11.1',
         true
     );
-    wp_add_inline_script( 'markjs', '
-(function () {
-    var searchInput = document.getElementById("translation-search-input");
-    var searchCount = document.getElementById("translation-search-count");
-    var searchClear = document.getElementById("translation-search-clear");
-    var prevBtn = document.querySelector("button[data-search=\'prev\']");
-    var nextBtn = document.querySelector("button[data-search=\'next\']");
-    if (!searchInput) return;
-    var markInstance = new Mark(document.querySelectorAll(".text-box"));
-    var currentClass = "current";
-    var offsetTop = 50;
-    var currentIndex = 0;
-    var results = [];
-    function jumpTo() {
-        if (!results.length) return;
-        results.forEach(function (el) { el.classList.remove(currentClass); });
-        var current = results[currentIndex];
-        if (current) {
-            current.classList.add(currentClass);
-            window.scrollTo(0, current.getBoundingClientRect().top + window.scrollY - offsetTop);
-        }
-    }
-    function doSearch() {
-        var term = searchInput.value.trim();
-        markInstance.unmark({
-            done: function () {
-                results = [];
-                currentIndex = 0;
-                if (!term) { searchCount.textContent = ""; return; }
-                markInstance.mark(term, {
-                    separateWordSearch: false,
-                    done: function (count) {
-                        results = Array.from(document.querySelectorAll(".text-box mark"));
-                        searchCount.textContent = count > 0 ? count + " found" : "none";
-                        jumpTo();
-                    }
-                });
-            }
-        });
-    }
-    searchInput.addEventListener("input", doSearch);
-    searchClear.addEventListener("click", function () {
-        searchInput.value = "";
-        markInstance.unmark();
-        searchCount.textContent = "";
-        results = [];
-        currentIndex = 0;
-    });
-    if (nextBtn) {
-        nextBtn.addEventListener("click", function () {
-            if (!results.length) return;
-            currentIndex = (currentIndex + 1) % results.length;
-            jumpTo();
-        });
-    }
-    if (prevBtn) {
-        prevBtn.addEventListener("click", function () {
-            if (!results.length) return;
-            currentIndex = (currentIndex - 1 + results.length) % results.length;
-            jumpTo();
-        });
-    }
-})();
-    ', 'after' );
+    wp_enqueue_script(
+        'dlinq-translation-search',
+        get_template_directory_uri() . '/js/translation-search.js',
+        array( 'markjs' ),
+        filemtime( get_template_directory() . '/js/translation-search.js' ),
+        true
+    );
 }
 
 add_action( 'wp_enqueue_scripts', 'dlinq_vtt_scripts' );
@@ -177,128 +120,13 @@ function dlinq_vtt_scripts() {
         '7',
         true
     );
-    wp_register_script( 'dlinq-vtt-init', '', array( 'wavesurfer' ), null, true );
-    wp_enqueue_script( 'dlinq-vtt-init' );
-    wp_add_inline_script( 'dlinq-vtt-init', '
-(function () {
-    var audio = document.getElementById("tt-audio");
-    if (!audio) return;
-
-    var trackEl = audio.querySelector("track");
-    if (!trackEl) return;
-    var vttUrl = trackEl.src;
-
-    var cues = [];
-    var activeCueIndex = -1;
-
-    // Parse HH:MM:SS.mmm or MM:SS.mmm to seconds
-    function parseTime(str) {
-        var parts = str.trim().split(":");
-        if (parts.length === 3) {
-            return parseFloat(parts[0]) * 3600 + parseFloat(parts[1]) * 60 + parseFloat(parts[2]);
-        }
-        return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
-    }
-
-    function parseVTT(text) {
-        var result = [];
-        text.trim().split(/\n{2,}/).forEach(function (block) {
-            var lines = block.trim().split("\n");
-            var tiLine = lines.find(function (l) { return l.indexOf("-->") !== -1; });
-            if (!tiLine) return;
-            var sides = tiLine.split("-->");
-            if (sides.length < 2) return;
-            result.push({
-                start: parseTime(sides[0]),
-                end:   parseTime(sides[1].trim().split(/\s/)[0])
-            });
-        });
-        return result;
-    }
-
-    function setActive(idx) {
-        if (idx === activeCueIndex) return;
-        activeCueIndex = idx;
-
-        // Clear previous highlights from both columns
-        document.querySelectorAll(".line.tt-current-phrase").forEach(function (l) {
-            l.classList.remove("tt-current-phrase");
-        });
-
-        if (idx < 0) return;
-
-        var lineNum = String(idx + 1); // data-line is 1-indexed
-        var scrollTarget = null;
-        document.querySelectorAll("[data-line=\"" + lineNum + "\"]").forEach(function (l) {
-            l.classList.add("tt-current-phrase");
-            if (!scrollTarget && l.closest(".original")) scrollTarget = l;
-        });
-        if (scrollTarget) {
-            scrollTarget.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
-    }
-
-    // Sync highlight as audio plays
-    audio.addEventListener("timeupdate", function () {
-        var t = audio.currentTime;
-        var idx = -1;
-        for (var i = 0; i < cues.length; i++) {
-            if (t >= cues[i].start && t < cues[i].end) { idx = i; break; }
-        }
-        setActive(idx);
-    });
-
-    // Reset on end
-    audio.addEventListener("ended", function () { setActive(-1); });
-
-    // Fetch + parse VTT, then wire click-to-seek on original lines
-    fetch(vttUrl)
-        .then(function (r) { return r.text(); })
-        .then(function (vttText) {
-            cues = parseVTT(vttText);
-            document.querySelectorAll(".original .line").forEach(function (line, i) {
-                if (!cues[i]) return;
-                line.style.cursor = "pointer";
-                line.addEventListener("click", function () {
-                    audio.currentTime = cues[i].start;
-                    if (audio.paused) audio.play();
-                });
-            });
-        })
-        .catch(function (err) { console.warn("VTT load failed:", err); });
-
-    // WaveSurfer waveform player
-    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    var ws = WaveSurfer.create({
-        container: "#waveform",
-        waveColor:     prefersDark ? "#888" : "#bbb",
-        progressColor: prefersDark ? "#ddd" : "#1a1a1a",
-        cursorColor:   prefersDark ? "#fff" : "#1a1a1a",
-        cursorWidth: 2,
-        height: 64,
-        normalize: true,
-        media: audio,
-        barWidth: 2,
-        barRadius: 2,
-    });
-
-    var playBtn = document.getElementById("play-btn");
-    var timeEl  = document.getElementById("player-time");
-
-    function fmt(s) {
-        var m = Math.floor(s / 60);
-        return m + ":" + String(Math.floor(s % 60)).padStart(2, "0");
-    }
-
-    ws.on("ready",      function (dur) { timeEl.textContent = "0:00 / " + fmt(dur); });
-    ws.on("timeupdate", function (t)   { timeEl.textContent = fmt(t) + " / " + fmt(ws.getDuration()); });
-    ws.on("play",       function ()    { playBtn.innerHTML = "&#9646;&#9646;"; playBtn.setAttribute("aria-label", "Pause"); });
-    ws.on("pause",      function ()    { playBtn.innerHTML = "&#9654;";        playBtn.setAttribute("aria-label", "Play");  });
-    ws.on("finish",     function ()    { playBtn.innerHTML = "&#9654;";        playBtn.setAttribute("aria-label", "Play");  });
-
-    playBtn.addEventListener("click", function () { ws.playPause(); });
-})();
-    ' );
+    wp_enqueue_script(
+        'dlinq-vtt-player',
+        get_template_directory_uri() . '/js/vtt-player.js',
+        array( 'wavesurfer' ),
+        filemtime( get_template_directory() . '/js/vtt-player.js' ),
+        true
+    );
 }
 
 add_action( 'wp_enqueue_scripts', 'dlinq_map_scripts' );
