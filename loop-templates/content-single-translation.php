@@ -7,6 +7,10 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+$audio_url = get_field( 'audio_file' );
+$vtt_url   = get_field( 'vtt_file' );
+$has_vtt   = ! empty( $audio_url ) && ! empty( $vtt_url );
 ?>
 
 <article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
@@ -35,7 +39,20 @@ defined( 'ABSPATH' ) || exit;
 	<?php echo get_the_post_thumbnail( $post->ID, 'large' ); ?>
 
 	<div class="entry-content">
-		
+
+	<?php if ( $has_vtt ) : ?>
+		<audio id="tt-audio" preload="metadata" src="<?php echo esc_url( $audio_url ); ?>">
+			<track kind="metadata" src="<?php echo esc_url( $vtt_url ); ?>" label="Phrase timing">
+		</audio>
+		<div id="tt-player">
+			<div id="waveform"></div>
+			<div id="player-controls">
+				<button id="play-btn" aria-label="Play">&#9654;</button>
+				<span id="player-time">0:00 / 0:00</span>
+			</div>
+		</div>
+	<?php endif; ?>
+
 	<!--translation display-->
 		<div class="container-fluid">
   			<div class="row">
@@ -43,8 +60,8 @@ defined( 'ABSPATH' ) || exit;
   					<?php echo dlinq_translation_legend();?>
   				</div>
   				<div class="col-md-6">
-      				<div class="original text-box">
-      					<?php echo dlinq_translation('original_text');?>
+      				<div class="original text-box<?php echo $has_vtt ? ' tt-transcript' : ''; ?>"<?php echo $has_vtt ? ' data-tt-media-urls="' . esc_url( $audio_url ) . '"' : ''; ?>>
+      					<?php echo dlinq_translation( 'original_text', $has_vtt ? ' tt-phrase' : '' );?>
       				</div>
       			</div>
       			<div class="col-md-6">

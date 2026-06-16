@@ -8,7 +8,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-function dlinq_translation($field) {
+function dlinq_translation($field, $extra_class = '') {
     $content = get_field($field);
     $content_array = str_replace(array('<br>', '<br/>', '<br />'), "\n", $content);
     $content_array = explode("\n", $content_array);
@@ -18,7 +18,7 @@ function dlinq_translation($field) {
     foreach ($content_array as $line) {
         if($line != "\r"){
             $line = dlinq_translation_highlights($line);
-            $html .= "<div class='line' data-line='{$counter}'>{$line}</div>";
+            $html .= "<div class='line{$extra_class}' data-line='{$counter}'>{$line}</div>";
             $counter++;
         } else {
             $html .= "<br>";

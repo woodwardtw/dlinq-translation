@@ -159,6 +159,95 @@ function dlinq_markjs_scripts() {
     ', 'after' );
 }
 
+add_action( 'wp_enqueue_scripts', 'dlinq_vtt_scripts' );
+function dlinq_vtt_scripts() {
+    if ( ! is_singular( 'translation' ) ) {
+        return;
+    }
+    $audio_url = get_field( 'audio_file' );
+    $vtt_url   = get_field( 'vtt_file' );
+    if ( empty( $audio_url ) || empty( $vtt_url ) ) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'wavesurfer',
+        'https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.min.js',
+        array(),
+        '7',
+        true
+    );
+    wp_enqueue_script(
+        'transcript-tracer',
+        'https://cdn.jsdelivr.net/gh/samuelbradshaw/transcript-tracer-js@main/transcript-tracer.js',
+        array(),
+        null,
+        true
+    );
+    wp_register_script( 'dlinq-vtt-init', '', array( 'wavesurfer', 'transcript-tracer' ), null, true );
+    wp_enqueue_script( 'dlinq-vtt-init' );
+    wp_add_inline_script( 'dlinq-vtt-init', '
+(function () {
+    loadTranscriptTracer({
+        alignmentFuzziness: 3,
+        autoScroll: "phrase",
+        clickable: true,
+    });
+
+    var audio = document.getElementById("tt-audio");
+    if (!audio) return;
+
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var ws = WaveSurfer.create({
+        container: "#waveform",
+        waveColor:     prefersDark ? "#888" : "#bbb",
+        progressColor: prefersDark ? "#ddd" : "#1a1a1a",
+        cursorColor:   prefersDark ? "#fff" : "#1a1a1a",
+        cursorWidth: 2,
+        height: 64,
+        normalize: true,
+        media: audio,
+        barWidth: 2,
+        barRadius: 2,
+    });
+
+    var playBtn  = document.getElementById("play-btn");
+    var timeEl   = document.getElementById("player-time");
+
+    function fmt(s) {
+        var m = Math.floor(s / 60);
+        return m + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+    }
+
+    ws.on("ready",      function (dur) { timeEl.textContent = "0:00 / " + fmt(dur); });
+    ws.on("timeupdate", function (t)   { timeEl.textContent = fmt(t) + " / " + fmt(ws.getDuration()); });
+    ws.on("play",       function ()    { playBtn.innerHTML = "&#9646;&#9646;"; playBtn.setAttribute("aria-label", "Pause"); });
+    ws.on("pause",      function ()    { playBtn.innerHTML = "&#9654;";        playBtn.setAttribute("aria-label", "Play");  });
+    ws.on("finish",     function ()    { playBtn.innerHTML = "&#9654;";        playBtn.setAttribute("aria-label", "Play");  });
+
+    playBtn.addEventListener("click", function () { ws.playPause(); });
+
+    // Mirror tt-current-phrase onto the translation column
+    var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            var el = mutation.target;
+            var lineNum = el.dataset.line;
+            if (!lineNum) return;
+            var translatedLines = document.querySelectorAll(".translated [data-line=\"" + lineNum + "\"]");
+            if (el.classList.contains("tt-current-phrase")) {
+                translatedLines.forEach(function (l) { l.classList.add("tt-current-phrase"); });
+            } else {
+                translatedLines.forEach(function (l) { l.classList.remove("tt-current-phrase"); });
+            }
+        });
+    });
+    document.querySelectorAll(".original .line").forEach(function (line) {
+        observer.observe(line, { attributes: true, attributeFilter: ["class"] });
+    });
+})();
+    ' );
+}
+
 add_action( 'wp_enqueue_scripts', 'dlinq_map_scripts' );
 function dlinq_map_scripts() {
     if ( ! is_page_template( 'page-templates/mappage.php' ) ) {
