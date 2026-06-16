@@ -73,4 +73,10 @@ function dlinq_translation_index(){
 add_shortcode('list-translations', 'dlinq_translation_index');
 
 
-
+//allow vtt files
+function custom_upload_mimes( $existing_mimes ) {
+    // Add .vtt to the list of allowable mime types
+    $existing_mimes['vtt'] = 'text/vtt';
+    return $existing_mimes;
+}
+add_filter( 'upload_mimes', 'custom_upload_mimes' );
