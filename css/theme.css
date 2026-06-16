@@ -15543,7 +15543,6 @@ h1, .h1 {
 
 .tt-transcript .tt-phrase {
   display: block;
-  padding: 0.35rem 0.5rem;
   border-radius: 0.25rem;
   cursor: pointer;
   transition: background-color 0.15s ease;
