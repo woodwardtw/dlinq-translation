@@ -81,6 +81,49 @@ function load_translation_admin_style() {
     wp_enqueue_script( 'acf-scroll-sync', get_template_directory_uri() . '/js/acf-scroll-sync.js', array(), '1.0', true );
 }
 
+add_action( 'wp_enqueue_scripts', 'dlinq_markjs_scripts' );
+function dlinq_markjs_scripts() {
+    if ( ! is_singular( 'translation' ) ) {
+        return;
+    }
+    wp_enqueue_script(
+        'markjs',
+        'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js',
+        array(),
+        '8.11.1',
+        true
+    );
+    wp_add_inline_script( 'markjs', '
+(function () {
+    var searchInput = document.getElementById("translation-search-input");
+    var searchCount = document.getElementById("translation-search-count");
+    var searchClear = document.getElementById("translation-search-clear");
+    if (!searchInput) return;
+    var markInstance = new Mark(document.querySelectorAll(".text-box"));
+    function doSearch() {
+        var term = searchInput.value.trim();
+        markInstance.unmark({
+            done: function () {
+                if (!term) { searchCount.textContent = ""; return; }
+                markInstance.mark(term, {
+                    separateWordSearch: false,
+                    done: function (count) {
+                        searchCount.textContent = count > 0 ? count + " found" : "none";
+                    }
+                });
+            }
+        });
+    }
+    searchInput.addEventListener("input", doSearch);
+    searchClear.addEventListener("click", function () {
+        searchInput.value = "";
+        markInstance.unmark();
+        searchCount.textContent = "";
+    });
+})();
+    ', 'after' );
+}
+
 add_action( 'wp_enqueue_scripts', 'dlinq_map_scripts' );
 function dlinq_map_scripts() {
     if ( ! is_page_template( 'page-templates/mappage.php' ) ) {

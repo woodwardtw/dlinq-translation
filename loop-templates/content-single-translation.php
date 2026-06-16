@@ -11,15 +11,22 @@ defined( 'ABSPATH' ) || exit;
 
 <article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
 
-	<header class="entry-header">
+	<header class="entry-header d-flex justify-content-between align-items-start flex-wrap gap-2">
 
-		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
+		<div>
+			<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
+			<div class="entry-meta">
+				<?php //understrap_posted_on(); ?>
+			</div><!-- .entry-meta -->
+		</div>
 
-		<div class="entry-meta">
-
-			<?php //understrap_posted_on(); ?>
-
-		</div><!-- .entry-meta -->
+		<div class="translation-search mt-2" id="translation-search">
+			<div class="input-group">
+				<input type="search" id="translation-search-input" class="form-control" placeholder="Search text…" aria-label="Search translation text">
+				<span class="input-group-text" id="translation-search-count" aria-live="polite"></span>
+				<button class="btn btn-outline-secondary" type="button" id="translation-search-clear" aria-label="Clear search">&#x2715;</button>
+			</div>
+		</div>
 
 	</header><!-- .entry-header -->
 
