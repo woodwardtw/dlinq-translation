@@ -177,26 +177,97 @@ function dlinq_vtt_scripts() {
         '7',
         true
     );
-    wp_enqueue_script(
-        'transcript-tracer',
-        'https://cdn.jsdelivr.net/gh/samuelbradshaw/transcript-tracer-js@main/transcript-tracer.js',
-        array(),
-        null,
-        true
-    );
-    wp_register_script( 'dlinq-vtt-init', '', array( 'wavesurfer', 'transcript-tracer' ), null, true );
+    wp_register_script( 'dlinq-vtt-init', '', array( 'wavesurfer' ), null, true );
     wp_enqueue_script( 'dlinq-vtt-init' );
     wp_add_inline_script( 'dlinq-vtt-init', '
 (function () {
-    loadTranscriptTracer({
-        alignmentFuzziness: 3,
-        autoScroll: "phrase",
-        clickable: true,
-    });
-
     var audio = document.getElementById("tt-audio");
     if (!audio) return;
 
+    var trackEl = audio.querySelector("track");
+    if (!trackEl) return;
+    var vttUrl = trackEl.src;
+
+    var cues = [];
+    var activeCueIndex = -1;
+
+    // Parse HH:MM:SS.mmm or MM:SS.mmm to seconds
+    function parseTime(str) {
+        var parts = str.trim().split(":");
+        if (parts.length === 3) {
+            return parseFloat(parts[0]) * 3600 + parseFloat(parts[1]) * 60 + parseFloat(parts[2]);
+        }
+        return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
+    }
+
+    function parseVTT(text) {
+        var result = [];
+        text.trim().split(/\n{2,}/).forEach(function (block) {
+            var lines = block.trim().split("\n");
+            var tiLine = lines.find(function (l) { return l.indexOf("-->") !== -1; });
+            if (!tiLine) return;
+            var sides = tiLine.split("-->");
+            if (sides.length < 2) return;
+            result.push({
+                start: parseTime(sides[0]),
+                end:   parseTime(sides[1].trim().split(/\s/)[0])
+            });
+        });
+        return result;
+    }
+
+    function setActive(idx) {
+        if (idx === activeCueIndex) return;
+        activeCueIndex = idx;
+
+        // Clear previous highlights from both columns
+        document.querySelectorAll(".line.tt-current-phrase").forEach(function (l) {
+            l.classList.remove("tt-current-phrase");
+        });
+
+        if (idx < 0) return;
+
+        var lineNum = String(idx + 1); // data-line is 1-indexed
+        var scrollTarget = null;
+        document.querySelectorAll("[data-line=\"" + lineNum + "\"]").forEach(function (l) {
+            l.classList.add("tt-current-phrase");
+            if (!scrollTarget && l.closest(".original")) scrollTarget = l;
+        });
+        if (scrollTarget) {
+            scrollTarget.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+    }
+
+    // Sync highlight as audio plays
+    audio.addEventListener("timeupdate", function () {
+        var t = audio.currentTime;
+        var idx = -1;
+        for (var i = 0; i < cues.length; i++) {
+            if (t >= cues[i].start && t < cues[i].end) { idx = i; break; }
+        }
+        setActive(idx);
+    });
+
+    // Reset on end
+    audio.addEventListener("ended", function () { setActive(-1); });
+
+    // Fetch + parse VTT, then wire click-to-seek on original lines
+    fetch(vttUrl)
+        .then(function (r) { return r.text(); })
+        .then(function (vttText) {
+            cues = parseVTT(vttText);
+            document.querySelectorAll(".original .line").forEach(function (line, i) {
+                if (!cues[i]) return;
+                line.style.cursor = "pointer";
+                line.addEventListener("click", function () {
+                    audio.currentTime = cues[i].start;
+                    if (audio.paused) audio.play();
+                });
+            });
+        })
+        .catch(function (err) { console.warn("VTT load failed:", err); });
+
+    // WaveSurfer waveform player
     var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     var ws = WaveSurfer.create({
         container: "#waveform",
@@ -211,8 +282,8 @@ function dlinq_vtt_scripts() {
         barRadius: 2,
     });
 
-    var playBtn  = document.getElementById("play-btn");
-    var timeEl   = document.getElementById("player-time");
+    var playBtn = document.getElementById("play-btn");
+    var timeEl  = document.getElementById("player-time");
 
     function fmt(s) {
         var m = Math.floor(s / 60);
@@ -226,24 +297,6 @@ function dlinq_vtt_scripts() {
     ws.on("finish",     function ()    { playBtn.innerHTML = "&#9654;";        playBtn.setAttribute("aria-label", "Play");  });
 
     playBtn.addEventListener("click", function () { ws.playPause(); });
-
-    // Mirror tt-current-phrase onto the translation column
-    var observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            var el = mutation.target;
-            var lineNum = el.dataset.line;
-            if (!lineNum) return;
-            var translatedLines = document.querySelectorAll(".translated [data-line=\"" + lineNum + "\"]");
-            if (el.classList.contains("tt-current-phrase")) {
-                translatedLines.forEach(function (l) { l.classList.add("tt-current-phrase"); });
-            } else {
-                translatedLines.forEach(function (l) { l.classList.remove("tt-current-phrase"); });
-            }
-        });
-    });
-    document.querySelectorAll(".original .line").forEach(function (line) {
-        observer.observe(line, { attributes: true, attributeFilter: ["class"] });
-    });
 })();
     ' );
 }
