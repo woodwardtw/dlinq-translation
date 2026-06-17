@@ -247,6 +247,33 @@ function dlinq_render_audio_player_in_editor( $field ) {
 	echo '</div>';
 }
 
+// Show "Edit VTT" button in editor when vtt_file has a value.
+add_action( 'acf/render_field/name=vtt_file', 'dlinq_render_edit_vtt_button' );
+function dlinq_render_edit_vtt_button( $field ) {
+	if ( empty( $field['value'] ) ) {
+		return;
+	}
+
+	$pages = get_pages( array(
+		'meta_key'   => '_wp_page_template',
+		'meta_value' => 'page-templates/vtt-adjustment.php',
+		'number'     => 1,
+	) );
+
+	if ( empty( $pages ) ) {
+		return;
+	}
+
+	$edit_url = add_query_arg( 'id', get_the_ID(), get_permalink( $pages[0]->ID ) );
+
+	echo '<div style="margin-top:8px;">';
+	printf(
+		'<a href="%s" target="_blank" class="button button-secondary">Edit VTT</a>',
+		esc_url( $edit_url )
+	);
+	echo '</div>';
+}
+
 	// REST endpoint: save VTT file contents for a translation post.
 add_action( 'rest_api_init', 'dlinq_register_vtt_rest_route' );
 function dlinq_register_vtt_rest_route() {
