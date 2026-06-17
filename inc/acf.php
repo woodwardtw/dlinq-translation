@@ -240,11 +240,12 @@ function dlinq_render_audio_player_in_editor( $field ) {
 		return;
 	}
 
-	echo '<div class="acf-audio-preview" style="margin-top: 8px;">';
-	echo '<audio controls style="width: 100%; max-width: 500px;">';
-	echo '<source src="' . esc_url( $url ) . '">';
-	echo '</audio>';
-	echo '</div>';
+	$escaped_url = esc_url( $url );
+	echo "<div class='acf-audio-preview'>
+			<audio controls style='width: 100%; max-width: 500px;'>
+				<source src='{$escaped_url}'>
+			</audio>
+		</div>";
 }
 
 // Show "Edit VTT" button in editor when vtt_file has a value.
