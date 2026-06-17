@@ -247,7 +247,59 @@ function dlinq_render_audio_player_in_editor( $field ) {
 	echo '</div>';
 }
 
-	//save acf json
+	// REST endpoint: save VTT file contents for a translation post.
+add_action( 'rest_api_init', 'dlinq_register_vtt_rest_route' );
+function dlinq_register_vtt_rest_route() {
+	register_rest_route( 'dlinq/v1', '/vtt/(?P<id>\d+)', array(
+		'methods'             => WP_REST_Server::CREATABLE,
+		'callback'            => 'dlinq_rest_save_vtt',
+		'permission_callback' => function() {
+			return current_user_can( 'publish_posts' );
+		},
+		'args' => array(
+			'id' => array(
+				'required' => true,
+			),
+		),
+	) );
+}
+
+function dlinq_rest_save_vtt( WP_REST_Request $request ) {
+	$translation_id = absint( $request->get_param( 'id' ) );
+
+	// Read directly from parsed JSON body to preserve newlines and special chars.
+	$params      = $request->get_json_params();
+	$vtt_content = isset( $params['vtt'] ) ? (string) $params['vtt'] : '';
+
+	if ( ! is_string( $vtt_content ) || strpos( ltrim( $vtt_content ), 'WEBVTT' ) !== 0 ) {
+		return new WP_Error( 'invalid_vtt', 'Content must be a valid VTT file.', array( 'status' => 400 ) );
+	}
+
+	$post = get_post( $translation_id );
+	if ( ! $post || 'translation' !== $post->post_type ) {
+		return new WP_Error( 'not_found', 'Translation not found.', array( 'status' => 404 ) );
+	}
+
+	// ACF file fields store the raw attachment ID in post meta.
+	$attachment_id = absint( get_post_meta( $translation_id, 'vtt_file', true ) );
+	if ( ! $attachment_id ) {
+		return new WP_Error( 'no_vtt', 'No VTT file attached to this translation.', array( 'status' => 404 ) );
+	}
+
+	$file_path = get_attached_file( $attachment_id );
+	if ( ! $file_path || ! file_exists( $file_path ) ) {
+		return new WP_Error( 'file_not_found', 'VTT file not found on disk.', array( 'status' => 404 ) );
+	}
+
+	$bytes = file_put_contents( $file_path, $vtt_content );
+	if ( false === $bytes ) {
+		return new WP_Error( 'write_failed', 'Could not write VTT file — check file permissions.', array( 'status' => 500 ) );
+	}
+
+	return rest_ensure_response( array( 'success' => true, 'bytes' => $bytes ) );
+}
+
+//save acf json
 add_filter('acf/settings/save_json', 'trans_json_save_point');
 	
 function trans_json_save_point( $path ) {

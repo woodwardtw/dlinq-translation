@@ -129,6 +129,49 @@ function dlinq_vtt_scripts() {
     );
 }
 
+add_action( 'wp_enqueue_scripts', 'dlinq_vtt_adjustment_scripts' );
+function dlinq_vtt_adjustment_scripts() {
+    if ( ! is_page_template( 'page-templates/vtt-adjustment.php' ) ) {
+        return;
+    }
+
+    $js_file = get_template_directory() . '/js/vtt-adjustment.js';
+    if ( ! file_exists( $js_file ) ) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'dlinq-vtt-adjustment',
+        get_template_directory_uri() . '/js/vtt-adjustment.js',
+        array(),
+        filemtime( $js_file ),
+        true
+    );
+
+    $translation_id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+    $audio_url      = '';
+    $vtt_url        = '';
+    $filename       = 'adjusted.vtt';
+
+    if ( $translation_id ) {
+        $post = get_post( $translation_id );
+        if ( $post && 'translation' === $post->post_type ) {
+            $audio_url = get_field( 'audio_file', $translation_id ) ?: '';
+            $vtt_url   = get_field( 'vtt_file', $translation_id )   ?: '';
+            $filename  = sanitize_file_name( $post->post_name . '-adjusted.vtt' );
+        }
+    }
+
+    wp_localize_script( 'dlinq-vtt-adjustment', 'vttAdjustData', array(
+        'audioUrl'      => $audio_url,
+        'vttUrl'        => $vtt_url,
+        'filename'      => $filename,
+        'restUrl'       => rest_url( 'dlinq/v1/vtt/' ),
+        'restNonce'     => wp_create_nonce( 'wp_rest' ),
+        'translationId' => $translation_id,
+    ) );
+}
+
 add_action( 'wp_enqueue_scripts', 'dlinq_map_scripts' );
 function dlinq_map_scripts() {
     if ( ! is_page_template( 'page-templates/mappage.php' ) ) {
