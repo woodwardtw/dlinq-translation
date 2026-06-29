@@ -10,7 +10,8 @@ defined( 'ABSPATH' ) || exit;
 
 $audio_url = get_field( 'audio_file' );
 $vtt_url   = get_field( 'vtt_file' );
-$has_vtt   = ! empty( $audio_url ) && ! empty( $vtt_url );
+$has_audio = ! empty( $audio_url );
+$has_vtt   = $has_audio && ! empty( $vtt_url );
 ?>
 
 <article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
@@ -40,9 +41,11 @@ $has_vtt   = ! empty( $audio_url ) && ! empty( $vtt_url );
 
 	<div class="entry-content">
 
-	<?php if ( $has_vtt ) : ?>
+	<?php if ( $has_audio ) : ?>
 		<audio id="tt-audio" preload="metadata" src="<?php echo esc_url( $audio_url ); ?>">
-			<track kind="metadata" src="<?php echo esc_url( $vtt_url ); ?>" label="Phrase timing">
+			<?php if ( $has_vtt ) : ?>
+				<track kind="metadata" src="<?php echo esc_url( $vtt_url ); ?>" label="Phrase timing">
+			<?php endif; ?>
 		</audio>
 		<div id="tt-player">
 			<div id="waveform"></div>

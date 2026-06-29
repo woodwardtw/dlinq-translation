@@ -192,6 +192,64 @@ function create_location_cpt() {
 	}
 	add_action( 'init', 'create_location_cpt', 0 );	
 
+function create_speaker_custom_post_type() {
+	$singular = 'Speaker';
+	$plural   = 'Speakers';
+	$slug     = 'speaker';
+
+	$labels = array(
+		'name'                  => $plural,
+		'singular_name'         => $singular,
+		'menu_name'             => $plural,
+		'name_admin_bar'        => $singular,
+		'add_new'               => 'Add New',
+		'add_new_item'          => 'Add New ' . $singular,
+		'new_item'              => 'New ' . $singular,
+		'edit_item'             => 'Edit ' . $singular,
+		'view_item'             => 'View ' . $singular,
+		'all_items'             => 'All ' . $plural,
+		'search_items'          => 'Search ' . $plural,
+		'parent_item_colon'     => 'Parent ' . $singular . ':',
+		'not_found'             => 'No ' . strtolower($plural) . ' found.',
+		'not_found_in_trash'    => 'No ' . strtolower($plural) . ' found in Trash.',
+		'featured_image'        => $singular . ' Featured Image',
+		'set_featured_image'    => 'Set featured image',
+		'remove_featured_image' => 'Remove featured image',
+		'use_featured_image'    => 'Use as featured image',
+	);
+
+	$args = array(
+		'labels'             => $labels,
+		'public'             => true,
+		'publicly_queryable' => true,
+		'show_ui'            => true,
+		'show_in_menu'       => true,
+		'show_in_rest'       => true,
+		'query_var'          => true,
+		'rewrite'            => array('slug' => $slug),
+		'capability_type'    => 'page',
+		'map_meta_cap'       => true,
+		'has_archive'        => true,
+		'hierarchical'       => true,
+		'menu_position'      => 20,
+		'menu_icon'          => 'dashicons-admin-page',
+		'supports'           => array(
+			'title',
+			'editor',
+			'author',
+			'thumbnail',
+			'excerpt',
+			'custom-fields',
+			'page-attributes',
+			'revisions'
+		),
+		'taxonomies'         => array('category', 'post_tag'),
+	);
+
+	register_post_type($slug, $args);
+}
+add_action('init', 'create_speaker_custom_post_type');
+
 
 // Resolve text_link post_object to a full object in the REST API response.
 add_filter( 'rest_prepare_location', 'dlinq_location_rest_text_link', 10, 3 );

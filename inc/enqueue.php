@@ -108,8 +108,7 @@ function dlinq_vtt_scripts() {
         return;
     }
     $audio_url = get_field( 'audio_file' );
-    $vtt_url   = get_field( 'vtt_file' );
-    if ( empty( $audio_url ) || empty( $vtt_url ) ) {
+    if ( empty( $audio_url ) ) {
         return;
     }
 
