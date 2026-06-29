@@ -16,12 +16,27 @@
 
   if (!audio || !transcript) return;
 
-  let originalVTT = '';
-  let cues        = [];
-  let activeRow   = null;
-  let statusTimer = null;
-  let saveTimer   = null;
+  let originalVTT  = '';
+  let cues         = [];
+  let activeRow    = null;
+  let statusTimer  = null;
+  let saveTimer    = null;
+  let seekStopAt   = null;
+  let seekListener = null;
+  let seekTimer    = null;
   const pendingRows = new Set();
+
+  // ── Seek helpers ─────────────────────────────────────────────────────────
+
+  function cancelSeek() {
+    clearTimeout(seekTimer);
+    seekTimer = null;
+    if (seekListener) {
+      audio.removeEventListener('timeupdate', seekListener);
+      seekListener = null;
+    }
+    seekStopAt = null;
+  }
 
   // ── Time helpers ────────────────────────────────────────────────────────
 
@@ -181,6 +196,7 @@
       textSpan.addEventListener('click', () => {
         const t = parseSec(row.querySelector('.vtt-start-inp').value);
         if (isFinite(t)) {
+          cancelSeek();
           audio.currentTime = t;
           audio.play();
           setTimeout(() => scrollRowIntoView(row), 0);
@@ -227,18 +243,25 @@
         const t   = parseSec(startInp.value);
         const end = parseSec(endInp.value);
         if (!isFinite(t)) return;
+        cancelSeek();
         audio.currentTime = t;
-        audio.play();
         if (isFinite(end) && end > t) {
-          const stopAt = end;
-          const onTime = () => {
-            if (audio.currentTime >= stopAt) {
+          seekStopAt = end;
+          // setTimeout is the primary stop — wall-clock accurate regardless of timeupdate frequency.
+          seekTimer = setTimeout(() => {
+            audio.pause();
+            cancelSeek();
+          }, Math.max(0, Math.round((end - t) * 1000)));
+          // timeupdate as fallback in case the timer fires slightly early.
+          seekListener = () => {
+            if (audio.currentTime >= seekStopAt) {
               audio.pause();
-              audio.removeEventListener('timeupdate', onTime);
+              cancelSeek();
             }
           };
-          audio.addEventListener('timeupdate', onTime);
+          audio.addEventListener('timeupdate', seekListener);
         }
+        audio.play();
         setTimeout(() => scrollRowIntoView(row), 0);
       }));
 
@@ -289,6 +312,8 @@
   audio.addEventListener('timeupdate', () => {
     const t = audio.currentTime;
     if (currentTime) currentTime.textContent = fmtTime(t);
+
+    if (seekStopAt !== null) return; // seeking — don't advance the active row
 
     let found = null;
     for (const row of transcript.querySelectorAll('.vtt-phrase-row')) {
