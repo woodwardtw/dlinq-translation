@@ -15754,6 +15754,14 @@ h1, .h1 {
 .vtt-ph-btn.vtt-seek-btn:hover {
   background: #dde5ff;
 }
+.vtt-ph-btn.vtt-delete-btn {
+  background: #ffeaea;
+  border-color: #e09090;
+  color: #aa2222;
+}
+.vtt-ph-btn.vtt-delete-btn:hover {
+  background: #ffd5d5;
+}
 
 @keyframes vtt-flash-row {
   0% {

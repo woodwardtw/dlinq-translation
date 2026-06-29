@@ -386,6 +386,14 @@ h1{
 
     &:hover { background: #dde5ff; }
   }
+
+  &.vtt-delete-btn {
+    background: #ffeaea;
+    border-color: #e09090;
+    color: #aa2222;
+
+    &:hover { background: #ffd5d5; }
+  }
 }
 
 @keyframes vtt-flash-row {

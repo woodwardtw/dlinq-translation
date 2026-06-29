@@ -275,6 +275,15 @@
         markRowDirty(row);
       }));
 
+      if (!cue.text) {
+        controls.appendChild(makeBtn('✕ Delete', 'Delete this empty cue', 'vtt-delete-btn', () => {
+          const idx = [...transcript.querySelectorAll('.vtt-phrase-row')].indexOf(row);
+          if (idx !== -1) cues.splice(idx, 1);
+          row.remove();
+          if (CAN_AUTOSAVE) autoSave();
+        }));
+      }
+
       if (CAN_AUTOSAVE) {
         const statusIcon = document.createElement('span');
         statusIcon.className = 'vtt-row-status';
