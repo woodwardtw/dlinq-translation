@@ -41,6 +41,29 @@
       }
       seekStopAt = null;
     }
+    function playCue(startInp, endInp, row) {
+      const t = parseSec(startInp.value);
+      const end = parseSec(endInp.value);
+      if (!isFinite(t)) return;
+      cancelSeek();
+      audio.currentTime = t;
+      if (isFinite(end) && end > t) {
+        seekStopAt = end;
+        seekTimer = setTimeout(() => {
+          audio.pause();
+          cancelSeek();
+        }, Math.max(0, Math.round((end - t) * 1000)));
+        seekListener = () => {
+          if (audio.currentTime >= seekStopAt) {
+            audio.pause();
+            cancelSeek();
+          }
+        };
+        audio.addEventListener('timeupdate', seekListener);
+      }
+      audio.play();
+      setTimeout(() => scrollRowIntoView(row), 0);
+    }
 
     // ── Time helpers ────────────────────────────────────────────────────────
 
@@ -199,13 +222,7 @@
         textSpan.className = 'vtt-phrase-text';
         textSpan.textContent = cue.text;
         textSpan.addEventListener('click', () => {
-          const t = parseSec(row.querySelector('.vtt-start-inp').value);
-          if (isFinite(t)) {
-            cancelSeek();
-            audio.currentTime = t;
-            audio.play();
-            setTimeout(() => scrollRowIntoView(row), 0);
-          }
+          playCue(row.querySelector('.vtt-start-inp'), row.querySelector('.vtt-end-inp'), row);
         });
         row.appendChild(textSpan);
         const controls = document.createElement('div');
@@ -239,29 +256,7 @@
         controls.appendChild(arrow);
         controls.appendChild(endInp);
         controls.appendChild(makeBtn('▶ Seek', 'Seek to this cue and stop at its end time', 'vtt-seek-btn', () => {
-          const t = parseSec(startInp.value);
-          const end = parseSec(endInp.value);
-          if (!isFinite(t)) return;
-          cancelSeek();
-          audio.currentTime = t;
-          if (isFinite(end) && end > t) {
-            seekStopAt = end;
-            // setTimeout is the primary stop — wall-clock accurate regardless of timeupdate frequency.
-            seekTimer = setTimeout(() => {
-              audio.pause();
-              cancelSeek();
-            }, Math.max(0, Math.round((end - t) * 1000)));
-            // timeupdate as fallback in case the timer fires slightly early.
-            seekListener = () => {
-              if (audio.currentTime >= seekStopAt) {
-                audio.pause();
-                cancelSeek();
-              }
-            };
-            audio.addEventListener('timeupdate', seekListener);
-          }
-          audio.play();
-          setTimeout(() => scrollRowIntoView(row), 0);
+          playCue(startInp, endInp, row);
         }));
         controls.appendChild(makeBtn('Mark Start', 'Set start time to current audio position', null, () => {
           startInp.value = fmtTime(audio.currentTime);
