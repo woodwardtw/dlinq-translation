@@ -182,6 +182,39 @@
                     "show_color_wheel": true
                 }
             ]
+        },
+        {
+            "key": "field_6a4287a5bf107",
+            "label": "Speaker",
+            "name": "speaker",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "speaker"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "taxonomy"
+            ],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "allow_in_bindings": 0,
+            "elements": "",
+            "bidirectional": 1,
+            "bidirectional_target": [
+                "field_6a4286c139dfb"
+            ]
         }
     ],
     "location": [
@@ -212,5 +245,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1781614756
+    "modified": 1782745034
 }

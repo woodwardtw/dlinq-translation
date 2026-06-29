@@ -232,7 +232,7 @@ function create_speaker_custom_post_type() {
 		'has_archive'        => true,
 		'hierarchical'       => true,
 		'menu_position'      => 20,
-		'menu_icon'          => 'dashicons-admin-page',
+		'menu_icon'          => 'dashicons-format-chat',
 		'supports'           => array(
 			'title',
 			'editor',
