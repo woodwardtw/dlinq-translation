@@ -37,7 +37,10 @@ $has_vtt   = $has_audio && ! empty( $vtt_url );
 
 	</header><!-- .entry-header -->
 
-	<?php echo get_the_post_thumbnail( $post->ID, 'large' ); ?>
+	<?php $thumbnail_url = get_the_post_thumbnail_url( $post->ID, 'thumbnail' ); ?>
+	<?php if ( $thumbnail_url ) : ?>
+		<div class="entry-thumbnail-banner" style="background-image: url('<?php echo esc_url( $thumbnail_url ); ?>');" role="presentation"></div>
+	<?php endif; ?>
 
 	<div class="entry-content">
 
