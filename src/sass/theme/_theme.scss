@@ -131,10 +131,16 @@ h1{
     position: fixed;
     right: 0;
     z-index: 10000;
-    top: 20px;
+    top: 80px;
     background-color: #efefef;
     padding: 10px;
     border: 1px solid #ddd;
+}
+
+//navbar
+.nav-link {
+  color: rgb(245, 245, 245);
+  font-size: 1.1rem;
 }
 
 // VTT-synced audio player
