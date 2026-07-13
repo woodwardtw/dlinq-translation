@@ -37,9 +37,17 @@ $has_vtt   = $has_audio && ! empty( $vtt_url );
 
 	</header><!-- .entry-header -->
 
-	<?php $thumbnail_url = get_the_post_thumbnail_url( $post->ID, 'thumbnail' ); ?>
+	<?php
+	$thumbnail_id  = get_post_thumbnail_id( $post->ID );
+	$thumbnail_url = get_the_post_thumbnail_url( $post->ID, 'thumbnail' );
+	$thumbnail_alt = $thumbnail_id ? get_post_meta( $thumbnail_id, '_wp_attachment_image_alt', true ) : '';
+	?>
 	<?php if ( $thumbnail_url ) : ?>
-		<div class="entry-thumbnail-banner" style="background-image: url('<?php echo esc_url( $thumbnail_url ); ?>');" role="presentation"></div>
+		<?php if ( $thumbnail_alt ) : ?>
+			<div class="entry-thumbnail-banner" style="background-image: url('<?php echo esc_url( $thumbnail_url ); ?>');" role="img" aria-label="<?php echo esc_attr( $thumbnail_alt ); ?>"></div>
+		<?php else : ?>
+			<div class="entry-thumbnail-banner" style="background-image: url('<?php echo esc_url( $thumbnail_url ); ?>');" role="presentation"></div>
+		<?php endif; ?>
 	<?php endif; ?>
 
 	<div class="entry-content">
