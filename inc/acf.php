@@ -10,6 +10,7 @@ defined( 'ABSPATH' ) || exit;
 
 function dlinq_translation($field, $extra_class = '') {
     $content = get_field($field);
+    $content = preg_replace('#<restored>(.*?)</restored>#s', '<span class="restored">$1</span>', $content);
     $content_array = str_replace(array('<br>', '<br/>', '<br />'), "\n", $content);
     $content_array = explode("\n", $content_array);
     //write_log($content_array);
