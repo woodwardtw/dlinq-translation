@@ -12,6 +12,8 @@ $audio_url = get_field( 'audio_file' );
 $vtt_url   = get_field( 'vtt_file' );
 $has_audio = ! empty( $audio_url );
 $has_vtt   = $has_audio && ! empty( $vtt_url );
+$logged_in = is_user_logged_in();
+$pad = $logged_in ? 'wp-pad' : '';
 ?>
 
 <article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
@@ -25,7 +27,7 @@ $has_vtt   = $has_audio && ! empty( $vtt_url );
 			</div><!-- .entry-meta -->
 		</div>
 
-		<div class="translation-search mt-2" id="translation-search">
+		<div class="translation-search <?php echo $pad;?>" id="translation-search">
 			<div class="input-group">
 				<input type="search" id="translation-search-input" class="form-control" placeholder="Search this story . . . " aria-label="Search translation text">
 				<span class="input-group-text" id="translation-search-count" aria-live="polite"></span>

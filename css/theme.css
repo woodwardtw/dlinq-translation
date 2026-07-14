@@ -15484,7 +15484,7 @@ h1, .h1 {
   position: fixed;
   right: 0;
   z-index: 10000;
-  top: 80px;
+  top: 0px;
   background-color: #efefef;
   padding: 10px;
   border: 1px solid #ddd;
@@ -15493,6 +15493,10 @@ h1, .h1 {
 .nav-link {
   color: rgb(245, 245, 245);
   font-size: 1.1rem;
+}
+
+.wp-pad {
+  margin-top: 30px;
 }
 
 #tt-player {
