@@ -87,31 +87,41 @@ $pad = $logged_in ? 'wp-pad' : '';
       			</div>
 				<div class="col-md-6 offset-md-3 ">
 					<?php $speakers = get_field( 'speaker' ); ?>
-				<?php if ( $speakers ) : ?>
-					<div class="speaker-box">
-						<h2>Speakers</h2>
-						<?php foreach ( $speakers as $speaker ) : ?>
-							<?php
-							$post_id = $speaker->ID;
-							$image   = get_field( 'bio_photo', $post_id );
-							?>
-							<div class="speaker row">
-								<?php if ( $image ) : ?>
-									<div class="col-md-3">
-										<img class="img-fluid" src="<?php echo esc_url( $image['sizes']['thumbnail'] ); ?>" alt="<?php echo esc_attr( $image['alt'] ); ?>">
+					<?php if ( $speakers ) : ?>
+						<div class="speaker-box">
+							<h2>Speakers</h2>
+							<?php foreach ( $speakers as $speaker ) : ?>
+								<?php
+								$post_id = $speaker->ID;
+								$image   = get_field( 'bio_photo', $post_id );
+								?>
+								<div class="speaker row">
+									<?php if ( $image ) : ?>
+										<div class="col-md-3">
+											<img class="img-fluid" src="<?php echo esc_url( $image['sizes']['thumbnail'] ); ?>" alt="<?php echo esc_attr( $image['alt'] ); ?>">
+										</div>
+									<?php endif; ?>
+									<div class="col-md-9">
+										<a href="<?php echo get_permalink( $post_id ); ?>"><?php echo get_the_title( $post_id ); ?></a>
+										<?php echo get_field( 'biography', $post_id ); ?>
 									</div>
-								<?php endif; ?>
-								<div class="col-md-9">
-									<a href="<?php echo get_permalink( $post_id ); ?>"><?php echo get_the_title( $post_id ); ?></a>
-									<?php echo get_field( 'biography', $post_id ); ?>
 								</div>
-							</div>
-						<?php endforeach; ?>
-					</div>
-				<?php else : ?>
-					<p>No speakers.</p>
-				<?php endif; ?>
+							<?php endforeach; ?>
+						</div>
+					<?php else : ?>
+						<p>No speakers.</p>
+					<?php endif; ?>
 				</div>
+				<?php $trajectory = get_field( 'text_trajectory' ); ?>
+				<?php if ( $trajectory ) : ?>
+					<div class="col-md-6 offset-md-3">
+						<div class="trajectory-box">
+							<h2>Text Trajectory</h2>
+							<?php echo $trajectory; ?>
+						</div>
+					</div>
+				<?php endif; ?>
+
       		</div>
       	</div>
     <!--end translation display-->
