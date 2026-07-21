@@ -15586,6 +15586,17 @@ h1, .h1 {
   color: #1a1a1a;
 }
 
+.speaker-box, .trajectory-box {
+  margin: 0.25rem 0;
+  padding: 1rem 1.5rem;
+  border: 1px solid black;
+}
+
+.speaker-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
 #vtt-adjustment-wrapper h1 small, #vtt-adjustment-wrapper .h1 small, #vtt-adjustment-wrapper h1 .small, #vtt-adjustment-wrapper .h1 .small {
   font-size: 1rem;
   font-weight: normal;

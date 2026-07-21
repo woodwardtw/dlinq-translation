@@ -102,7 +102,7 @@ $pad = $logged_in ? 'wp-pad' : '';
 										</div>
 									<?php endif; ?>
 									<div class="col-md-9">
-										<a href="<?php echo get_permalink( $post_id ); ?>"><?php echo get_the_title( $post_id ); ?></a>
+										<a href="<?php echo get_permalink( $post_id ); ?>" class="speaker-name"><?php echo get_the_title( $post_id ); ?></a>
 										<?php echo get_field( 'biography', $post_id ); ?>
 									</div>
 								</div>
