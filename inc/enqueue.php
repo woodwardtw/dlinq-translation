@@ -158,6 +158,15 @@ function dlinq_vtt_adjustment_scripts() {
             $audio_url = get_field( 'audio_file', $translation_id ) ?: '';
             $vtt_url   = get_field( 'vtt_file', $translation_id )   ?: '';
             $filename  = sanitize_file_name( $post->post_name . '-adjusted.vtt' );
+
+            // The VTT file is overwritten in place on save (same URL), so bust
+            // any browser/CDN cache with the file's current mtime on each load.
+            if ( $vtt_url ) {
+                $vtt_attachment_id = absint( get_post_meta( $translation_id, 'vtt_file', true ) );
+                $vtt_path          = $vtt_attachment_id ? get_attached_file( $vtt_attachment_id ) : false;
+                $vtt_mtime         = $vtt_path && file_exists( $vtt_path ) ? filemtime( $vtt_path ) : time();
+                $vtt_url           = add_query_arg( 'v', $vtt_mtime, $vtt_url );
+            }
         }
     }
 
