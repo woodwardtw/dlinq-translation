@@ -12,6 +12,16 @@ $audio_url = get_field( 'audio_file' );
 $vtt_url   = get_field( 'vtt_file' );
 $has_audio = ! empty( $audio_url );
 $has_vtt   = $has_audio && ! empty( $vtt_url );
+
+// The VTT file is overwritten in place on save (same URL), so bust any
+// browser/CDN cache with the file's current mtime on each load.
+if ( $has_vtt ) {
+	$vtt_attachment_id = absint( get_post_meta( get_the_ID(), 'vtt_file', true ) );
+	$vtt_path          = $vtt_attachment_id ? get_attached_file( $vtt_attachment_id ) : false;
+	$vtt_mtime         = $vtt_path && file_exists( $vtt_path ) ? filemtime( $vtt_path ) : time();
+	$vtt_url           = add_query_arg( 'v', $vtt_mtime, $vtt_url );
+}
+
 $logged_in = is_user_logged_in();
 $pad = $logged_in ? 'wp-pad' : '';
 ?>
