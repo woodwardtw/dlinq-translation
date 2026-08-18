@@ -78,6 +78,9 @@ $pad = $logged_in ? 'wp-pad' : '';
 			</div>
 		</div>
 	<?php endif; ?>
+	<?php if ( $has_vtt ) : ?>
+		<a class="btn btn-primary" href="<?php echo esc_url( $vtt_url ); ?>" download id="download-vtt">Download VTT file</a>
+	<?php endif; ?>
 
 	<!--translation display-->
 		<div class="container-fluid">
