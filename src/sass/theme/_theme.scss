@@ -8,12 +8,17 @@ body {
 }
 
 h1{
-  margin: 50px;
+  margin: 50px 50px 20px 50px;
   font-family: "Cormorant Garamond", serif;
   font-optical-sizing: auto;
   font-weight: 700;
   font-style: normal;
   font-size: 3rem;
+}
+
+.entry-meta {
+  margin-left: 50px;
+  margin-bottom: 30px;
 }
 
 #single-wrapper .container-fluid {

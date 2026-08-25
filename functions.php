@@ -80,3 +80,16 @@ function custom_upload_mimes( $existing_mimes ) {
     return $existing_mimes;
 }
 add_filter( 'upload_mimes', 'custom_upload_mimes' );
+
+function dlinq_translation_speaker_primary( $post_id = null ) {
+	$speakers = get_field( 'speaker', $post_id );
+	if ( ! $speakers ) {
+		return '';
+	}
+	$names = array();
+	foreach ( $speakers as $speaker ) {
+		$names[] = get_the_title( $speaker->ID );
+	}
+	$label = count( $names ) > 1 ? 'Speakers:' : 'Speaker:';
+	return $label . ' ' . implode( ', ', $names );
+}
