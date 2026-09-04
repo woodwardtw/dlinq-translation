@@ -88,7 +88,13 @@ function dlinq_translation_speaker_primary( $post_id = null ) {
 	}
 	$names = array();
 	foreach ( $speakers as $speaker ) {
-		$names[] = get_the_title( $speaker->ID );
+		$name = get_the_title( $speaker->ID );
+		$tags = get_the_terms( $speaker->ID, 'post_tag' );
+		if ( $tags && ! is_wp_error( $tags ) ) {
+			$tag_names = wp_list_pluck( $tags, 'name' );
+			$name     .= ' (' . implode( ', ', $tag_names ) . ')';
+		}
+		$names[] = $name;
 	}
 	$label = count( $names ) > 1 ? 'Speakers:' : 'Speaker:';
 	return $label . ' ' . implode( ', ', $names );
