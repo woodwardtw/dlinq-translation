@@ -96,7 +96,7 @@ function dlinq_translation_speaker_primary( $post_id = null ) {
 		}
 		$names[] = $name;
 	}
-	$label = count( $names ) > 1 ? 'Speakers:' : 'Speaker:';
+	$label = count( $names ) > 1 ? 'Participants:' : 'Participant:';
 	return $label . ' ' . implode( ', ', $names );
 }
 
