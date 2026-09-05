@@ -99,3 +99,21 @@ function dlinq_translation_speaker_primary( $post_id = null ) {
 	$label = count( $names ) > 1 ? 'Speakers:' : 'Speaker:';
 	return $label . ' ' . implode( ', ', $names );
 }
+
+/**
+ * On a single Speaker page, restrict any Query Loop block configured for the
+ * "translation" post type to the translations connected via the bidirectional
+ * ACF relationship field, instead of all translations.
+ */
+function dlinq_translation_speaker_query_loop( $query, $block, $page ) {
+	if ( ! is_singular( 'speaker' ) || ! isset( $query['post_type'] ) || 'translation' !== $query['post_type'] ) {
+		return $query;
+	}
+
+	$translations = get_field( 'translations', get_queried_object_id() );
+	$query['post__in'] = $translations ? wp_list_pluck( $translations, 'ID' ) : array( 0 );
+	$query['orderby']  = 'post__in';
+
+	return $query;
+}
+add_filter( 'query_loop_block_query_vars', 'dlinq_translation_speaker_query_loop', 10, 3 );

@@ -416,5 +416,99 @@ function trans_json_load_point( $paths ) {
 	
 	// return
 	return $paths;
-	
+
+}
+
+// Taxonomy mirroring the speaker <-> translation ACF bidirectional relationship,
+// so editors can filter a Query Loop block by speaker in the block editor
+// (e.g. multiple "translations by author" loops on the home page).
+add_action( 'init', 'dlinq_register_speaker_taxonomy' );
+function dlinq_register_speaker_taxonomy() {
+	register_taxonomy( 'speaker_tax', 'translation', array(
+		'label'             => 'Speaker',
+		'hierarchical'      => false,
+		'public'            => true,
+		'show_ui'           => true,
+		'show_in_rest'      => true,
+		'show_admin_column' => true,
+		'rewrite'           => false,
+	) );
+}
+
+// Get (creating if needed) the speaker_tax term for a given speaker post,
+// keeping its name in sync with the speaker's title.
+function dlinq_get_speaker_term_id( $speaker_id ) {
+	$slug = 'speaker-' . $speaker_id;
+	$name = get_the_title( $speaker_id );
+	$term = get_term_by( 'slug', $slug, 'speaker_tax' );
+
+	if ( ! $term ) {
+		$inserted = wp_insert_term( $name, 'speaker_tax', array( 'slug' => $slug ) );
+		return is_wp_error( $inserted ) ? 0 : (int) $inserted['term_id'];
+	}
+
+	if ( $term->name !== $name ) {
+		wp_update_term( $term->term_id, 'speaker_tax', array( 'name' => $name ) );
+	}
+
+	return (int) $term->term_id;
+}
+
+// Set a translation post's speaker_tax terms from its ACF "speaker" field.
+function dlinq_sync_translation_speaker_terms( $translation_id ) {
+	$speakers = get_field( 'speaker', $translation_id );
+	$term_ids = array();
+
+	if ( $speakers ) {
+		foreach ( $speakers as $speaker ) {
+			$term_id = dlinq_get_speaker_term_id( $speaker->ID );
+			if ( $term_id ) {
+				$term_ids[] = $term_id;
+			}
+		}
+	}
+
+	wp_set_object_terms( $translation_id, $term_ids, 'speaker_tax' );
+}
+
+// Keep speaker_tax in sync no matter which side of the bidirectional
+// relationship (translation or speaker) was edited.
+add_action( 'acf/save_post', 'dlinq_sync_speaker_taxonomy_on_save', 20 );
+function dlinq_sync_speaker_taxonomy_on_save( $post_id ) {
+	$post_type = get_post_type( $post_id );
+
+	if ( 'translation' === $post_type ) {
+		dlinq_sync_translation_speaker_terms( $post_id );
+		return;
+	}
+
+	if ( 'speaker' === $post_type ) {
+		$translations = get_field( 'translations', $post_id );
+		if ( $translations ) {
+			foreach ( $translations as $translation ) {
+				dlinq_sync_translation_speaker_terms( $translation->ID );
+			}
+		}
+	}
+}
+
+// One-time backfill so existing translation/speaker relationships get terms
+// without requiring every post to be re-saved.
+add_action( 'init', 'dlinq_backfill_speaker_taxonomy', 20 );
+function dlinq_backfill_speaker_taxonomy() {
+	if ( get_option( 'dlinq_speaker_tax_backfilled' ) ) {
+		return;
+	}
+
+	$translation_ids = get_posts( array(
+		'post_type'      => 'translation',
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+	) );
+
+	foreach ( $translation_ids as $translation_id ) {
+		dlinq_sync_translation_speaker_terms( $translation_id );
+	}
+
+	update_option( 'dlinq_speaker_tax_backfilled', 1 );
 }
