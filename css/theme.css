@@ -15421,6 +15421,11 @@ h1, .h1 {
   counter-increment: line;
 }
 
+.translated .line {
+  padding-left: 53px;
+  text-indent: -53px;
+}
+
 .translated .line:before {
   content: counter(line);
   display: inline-block;
@@ -15432,12 +15437,19 @@ h1, .h1 {
   text-align: right;
 }
 
+.original .line {
+  position: relative;
+  padding-right: 53px;
+}
+
 .original .line:after {
   content: counter(line);
   display: inline-block;
+  position: absolute;
+  top: 5px;
+  right: 0;
   border-left: 1px solid #ddd;
   padding: 0 0.5em;
-  margin-left: 0.5em;
   color: #888;
   width: 45px;
   text-align: left;

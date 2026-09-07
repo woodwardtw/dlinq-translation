@@ -10,6 +10,38 @@ allLines.forEach((line) => {
   });
 });
 
+// Keep matching original/translation lines vertically aligned even when
+// one side wraps to more visual lines than the other.
+function equalizeLineHeights() {
+  const groups = {};
+  allLines.forEach((line) => {
+    const key = line.dataset.line;
+    line.style.minHeight = '';
+    if (!groups[key]) {
+      groups[key] = [];
+    }
+    groups[key].push(line);
+  });
+
+  Object.values(groups).forEach((lines) => {
+    if (lines.length < 2) {
+      return;
+    }
+    const maxHeight = Math.max(...lines.map((line) => line.offsetHeight));
+    lines.forEach((line) => {
+      line.style.minHeight = `${maxHeight}px`;
+    });
+  });
+}
+
+equalizeLineHeights();
+
+let lineHeightResizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(lineHeightResizeTimer);
+  lineHeightResizeTimer = setTimeout(equalizeLineHeights, 150);
+});
+
 
 function highlightLines(lineNumber){
   // const oldFocus = document.querySelectorAll('.highlight');
