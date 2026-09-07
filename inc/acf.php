@@ -194,8 +194,8 @@ function create_location_cpt() {
 	add_action( 'init', 'create_location_cpt', 0 );	
 
 function create_speaker_custom_post_type() {
-	$singular = 'Speaker';
-	$plural   = 'Speakers';
+	$singular = 'Participant';
+	$plural   = 'Participants';
 	$slug     = 'speaker';
 
 	$labels = array(

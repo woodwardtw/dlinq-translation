@@ -185,7 +185,7 @@
         },
         {
             "key": "field_6a4287a5bf107",
-            "label": "Speaker",
+            "label": "Participant",
             "name": "speaker",
             "aria-label": "",
             "type": "relationship",
@@ -266,5 +266,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1784634742
+    "modified": 1788794971
 }
