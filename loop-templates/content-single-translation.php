@@ -107,8 +107,10 @@ $pad = $logged_in ? 'wp-pad' : '';
 							<h2><?php echo count( $speakers ) === 1 ? 'Participant' : 'Participants'; ?></h2>
 							<?php foreach ( $speakers as $speaker ) : ?>
 								<?php
-								$post_id = $speaker->ID;
-								$image   = get_field( 'bio_photo', $post_id );
+								$post_id   = $speaker->ID;
+								$image     = get_field( 'bio_photo', $post_id );
+								$tags      = get_the_terms( $post_id, 'post_tag' );
+								$tag_names = ( $tags && ! is_wp_error( $tags ) ) ? wp_list_pluck( $tags, 'name' ) : array();
 								?>
 								<div class="speaker row">
 									<?php if ( $image ) : ?>
@@ -118,6 +120,9 @@ $pad = $logged_in ? 'wp-pad' : '';
 									<?php endif; ?>
 									<div class="col-md-9">
 										<a href="<?php echo get_permalink( $post_id ); ?>" class="speaker-name"><?php echo get_the_title( $post_id ); ?></a>
+										<?php if ( $tag_names ) : ?>
+											<span class="speaker-tags">(<?php echo esc_html( implode( ', ', $tag_names ) ); ?>)</span>
+										<?php endif; ?>
 										<?php echo get_field( 'biography', $post_id ); ?>
 									</div>
 								</div>
