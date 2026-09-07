@@ -104,7 +104,7 @@ $pad = $logged_in ? 'wp-pad' : '';
 					<?php $speakers = get_field( 'speaker' ); ?>
 					<?php if ( $speakers ) : ?>
 						<div class="speaker-box">
-							<h2>Speakers</h2>
+							<h2><?php echo count( $speakers ) === 1 ? 'Participant' : 'Participants'; ?></h2>
 							<?php foreach ( $speakers as $speaker ) : ?>
 								<?php
 								$post_id = $speaker->ID;
