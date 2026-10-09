@@ -71,7 +71,7 @@ function makeSinglePlugins() {
 	];
 }
 
-const conditionalScripts = [ 'translation-search', 'vtt-player', 'vtt-adjustment' ].map( ( name ) => ( {
+const conditionalScripts = [ 'translation-search', 'vtt-player', 'vtt-adjustment', 'podcast-settings' ].map( ( name ) => ( {
 	input: path.resolve( __dirname, `../js/${ name }.js` ),
 	output: {
 		banner: banner( '' ),

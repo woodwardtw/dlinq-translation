@@ -199,3 +199,19 @@ function dlinq_map_scripts() {
         false // load in <head> so it is available to inline template scripts
     );
 }
+
+add_action( 'admin_enqueue_scripts', 'dlinq_podcast_settings_scripts' );
+function dlinq_podcast_settings_scripts( $hook ) {
+    if ( 'settings_page_dlinq-podcast' !== $hook ) {
+        return;
+    }
+
+    wp_enqueue_media();
+    wp_enqueue_script(
+        'dlinq-podcast-settings',
+        get_template_directory_uri() . '/js/podcast-settings.js',
+        array(),
+        filemtime( get_template_directory() . '/js/podcast-settings.js' ),
+        true
+    );
+}

@@ -68,8 +68,28 @@ function dlinq_podcast_feed_link() {
 }
 
 /*
- * Show-level settings (Appearance > Customize > Podcast).
+ * Show-level settings (Settings > Podcast), stored in the dlinq_podcast option.
  */
+define( 'DLINQ_PODCAST_OPTION', 'dlinq_podcast' );
+
+/**
+ * Settings fields: key => label, description, input type.
+ */
+function dlinq_podcast_fields() {
+	return array(
+		'title'                => array( 'Podcast title', 'Leave blank to use the site title.', 'text' ),
+		'description'          => array( 'Podcast description', 'Leave blank to use the site tagline.', 'textarea' ),
+		'author'               => array( 'Author', 'Shown as the podcast creator in apps. Leave blank to use the site title.', 'text' ),
+		'owner_name'           => array( 'Owner name', 'Used by directories (Apple, etc.) for ownership verification. Leave blank to use the site title.', 'text' ),
+		'owner_email'          => array( 'Owner email', 'Published in the feed. Directories send verification emails here.', 'email' ),
+		'cover'                => array( 'Cover art', 'Square JPG or PNG, 1400–3000px (required by Apple Podcasts).', 'image' ),
+		'category'             => array( 'Apple Podcasts category', 'Use "Category > Subcategory", e.g. "Society & Culture > Documentary".', 'text' ),
+		'explicit'             => array( 'Explicit content', 'Mark the podcast as containing explicit content.', 'checkbox' ),
+		'original_language'    => array( 'Default original language', 'Language code (e.g. "fr") used when a translation has no "lang" custom field.', 'text' ),
+		'translation_language' => array( 'Translation language', 'Language code of the translated text, e.g. "en".', 'text' ),
+	);
+}
+
 function dlinq_podcast_setting( $key ) {
 	$defaults = array(
 		'title'                => get_bloginfo( 'name' ),
@@ -84,7 +104,8 @@ function dlinq_podcast_setting( $key ) {
 		'translation_language' => 'en',
 	);
 
-	$value = get_theme_mod( 'dlinq_podcast_' . $key, $defaults[ $key ] );
+	$options = get_option( DLINQ_PODCAST_OPTION, array() );
+	$value   = isset( $options[ $key ] ) ? $options[ $key ] : $defaults[ $key ];
 
 	// Empty text settings fall back to the default rather than going blank.
 	if ( '' === $value && '' !== $defaults[ $key ] ) {
@@ -94,85 +115,127 @@ function dlinq_podcast_setting( $key ) {
 	return $value;
 }
 
-add_action( 'customize_register', 'dlinq_podcast_customize_register' );
-function dlinq_podcast_customize_register( $wp_customize ) {
-	$wp_customize->add_section(
+add_action( 'admin_menu', 'dlinq_podcast_add_settings_page' );
+function dlinq_podcast_add_settings_page() {
+	add_options_page( 'Podcast', 'Podcast', 'manage_options', 'dlinq-podcast', 'dlinq_podcast_render_settings_page' );
+}
+
+add_action( 'admin_init', 'dlinq_podcast_register_settings' );
+function dlinq_podcast_register_settings() {
+	register_setting(
 		'dlinq_podcast',
+		DLINQ_PODCAST_OPTION,
 		array(
-			'title'       => 'Podcast',
-			'priority'    => 160,
-			'description' => sprintf(
-				'Settings for the translations podcast feed: <a href="%1$s" target="_blank">%1$s</a>. Episodes are published translations with an audio file.',
-				esc_url( get_feed_link( DLINQ_PODCAST_FEED ) )
-			),
+			'type'              => 'array',
+			'sanitize_callback' => 'dlinq_podcast_sanitize_settings',
+			'default'           => array(),
 		)
 	);
 
-	$text_fields = array(
-		'title'                => array( 'Podcast title', 'Defaults to the site title.', 'sanitize_text_field' ),
-		'description'          => array( 'Podcast description', 'Defaults to the site tagline.', 'sanitize_textarea_field' ),
-		'author'               => array( 'Author', 'Shown as the podcast creator in apps.', 'sanitize_text_field' ),
-		'owner_name'           => array( 'Owner name', 'Used by directories (Apple, etc.) for ownership verification.', 'sanitize_text_field' ),
-		'owner_email'          => array( 'Owner email', 'Published in the feed. Directories send verification emails here.', 'sanitize_email' ),
-		'category'             => array( 'Apple Podcasts category', 'Use "Category > Subcategory", e.g. "Society & Culture > Documentary".', 'sanitize_text_field' ),
-		'original_language'    => array( 'Default original language', 'Language code (e.g. "fr") used when a translation has no "lang" custom field.', 'sanitize_text_field' ),
-		'translation_language' => array( 'Translation language', 'Language code of the translated text, e.g. "en".', 'sanitize_text_field' ),
+	add_settings_section(
+		'dlinq_podcast_main',
+		'',
+		function() {
+			printf(
+				'<p>Feed URL: <a href="%1$s" target="_blank">%1$s</a><br>Episodes are published translations with an audio file. Category and tag feeds work too, e.g. <code>/category/&lt;slug&gt;/feed/podcast/</code>.</p>',
+				esc_url( get_feed_link( DLINQ_PODCAST_FEED ) )
+			);
+		},
+		'dlinq-podcast'
 	);
 
-	foreach ( $text_fields as $key => $field ) {
-		$wp_customize->add_setting(
+	foreach ( dlinq_podcast_fields() as $key => $field ) {
+		add_settings_field(
 			'dlinq_podcast_' . $key,
+			$field[0],
+			'dlinq_podcast_render_field',
+			'dlinq-podcast',
+			'dlinq_podcast_main',
 			array(
-				'default'           => '',
-				'sanitize_callback' => $field[2],
-			)
-		);
-		$wp_customize->add_control(
-			'dlinq_podcast_' . $key,
-			array(
-				'label'       => $field[0],
-				'description' => $field[1],
-				'section'     => 'dlinq_podcast',
-				'type'        => 'description' === $key ? 'textarea' : ( 'owner_email' === $key ? 'email' : 'text' ),
+				'key'       => $key,
+				'label_for' => 'checkbox' === $field[2] ? null : 'dlinq_podcast_' . $key,
 			)
 		);
 	}
+}
 
-	$wp_customize->add_setting(
-		'dlinq_podcast_cover',
-		array(
-			'default'           => 0,
-			'sanitize_callback' => 'absint',
-		)
-	);
-	$wp_customize->add_control(
-		new WP_Customize_Media_Control(
-			$wp_customize,
-			'dlinq_podcast_cover',
-			array(
-				'label'       => 'Cover art',
-				'description' => 'Square JPG or PNG, 1400–3000px (required by Apple Podcasts).',
-				'section'     => 'dlinq_podcast',
-				'mime_type'   => 'image',
-			)
-		)
-	);
+function dlinq_podcast_sanitize_settings( $input ) {
+	$input = is_array( $input ) ? $input : array();
+	$clean = array();
 
-	$wp_customize->add_setting(
-		'dlinq_podcast_explicit',
-		array(
-			'default'           => false,
-			'sanitize_callback' => 'wp_validate_boolean',
-		)
-	);
-	$wp_customize->add_control(
-		'dlinq_podcast_explicit',
-		array(
-			'label'   => 'Contains explicit content',
-			'section' => 'dlinq_podcast',
-			'type'    => 'checkbox',
-		)
-	);
+	foreach ( dlinq_podcast_fields() as $key => $field ) {
+		$value = $input[ $key ] ?? '';
+		switch ( $field[2] ) {
+			case 'textarea':
+				$clean[ $key ] = sanitize_textarea_field( $value );
+				break;
+			case 'email':
+				$clean[ $key ] = sanitize_email( $value );
+				break;
+			case 'image':
+				$clean[ $key ] = absint( $value );
+				break;
+			case 'checkbox':
+				$clean[ $key ] = ! empty( $value );
+				break;
+			default:
+				$clean[ $key ] = sanitize_text_field( $value );
+		}
+	}
+
+	return $clean;
+}
+
+function dlinq_podcast_render_field( $args ) {
+	$key     = $args['key'];
+	$field   = dlinq_podcast_fields()[ $key ];
+	$options = get_option( DLINQ_PODCAST_OPTION, array() );
+	$value   = $options[ $key ] ?? '';
+	$id      = 'dlinq_podcast_' . $key;
+	$name    = DLINQ_PODCAST_OPTION . '[' . $key . ']';
+
+	switch ( $field[2] ) {
+		case 'textarea':
+			printf( '<textarea id="%s" name="%s" rows="4" class="large-text">%s</textarea>', esc_attr( $id ), esc_attr( $name ), esc_textarea( $value ) );
+			break;
+		case 'checkbox':
+			printf( '<label><input type="checkbox" name="%s" value="1"%s> %s</label>', esc_attr( $name ), checked( ! empty( $value ), true, false ), esc_html( $field[1] ) );
+			return;
+		case 'image':
+			$image_id  = absint( $value );
+			$image_src = $image_id ? wp_get_attachment_image_url( $image_id, 'medium' ) : '';
+			printf(
+				'<div class="dlinq-podcast-image"><input type="hidden" id="%1$s" name="%2$s" value="%3$s"><img src="%4$s" alt="" style="max-width:200px;height:auto;display:%5$s;margin-bottom:8px;"><br><button type="button" class="button dlinq-podcast-image-select">Select image</button> <button type="button" class="button dlinq-podcast-image-remove" style="display:%5$s;">Remove</button></div>',
+				esc_attr( $id ),
+				esc_attr( $name ),
+				esc_attr( $image_id ? $image_id : '' ),
+				esc_url( $image_src ),
+				$image_src ? 'inline-block' : 'none'
+			);
+			break;
+		default:
+			printf( '<input type="%s" id="%s" name="%s" value="%s" class="regular-text">', esc_attr( $field[2] ), esc_attr( $id ), esc_attr( $name ), esc_attr( $value ) );
+	}
+
+	printf( '<p class="description">%s</p>', esc_html( $field[1] ) );
+}
+
+function dlinq_podcast_render_settings_page() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	?>
+	<div class="wrap">
+		<h1>Podcast</h1>
+		<form action="options.php" method="post">
+			<?php
+			settings_fields( 'dlinq_podcast' );
+			do_settings_sections( 'dlinq-podcast' );
+			submit_button();
+			?>
+		</form>
+	</div>
+	<?php
 }
 
 /*
