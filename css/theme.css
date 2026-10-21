@@ -15364,6 +15364,13 @@ body {
   color: rgb(27, 45, 64);
 }
 
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+  font-family: "Cormorant Garamond", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
 h1, .h1 {
   margin: 50px 50px 20px 50px;
   font-family: "Cormorant Garamond", serif;
