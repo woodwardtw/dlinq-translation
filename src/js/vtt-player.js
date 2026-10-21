@@ -34,6 +34,14 @@ if ( audio ) {
 
 	playBtn.addEventListener( 'click', function() { ws.playPause(); } );
 
+	var loopBtn = document.getElementById( 'loop-btn' );
+	if ( loopBtn ) {
+		loopBtn.addEventListener( 'click', function() {
+			audio.loop = ! audio.loop;
+			loopBtn.setAttribute( 'aria-pressed', audio.loop ? 'true' : 'false' );
+		} );
+	}
+
 	if ( trackEl ) {
 		var vttUrl         = trackEl.src;
 		var cues           = [];

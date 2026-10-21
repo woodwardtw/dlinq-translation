@@ -224,6 +224,29 @@ h1{
   font-family: monospace;
 }
 
+#loop-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 2px solid rgba(27, 45, 64, 1);
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(27, 45, 64, 1);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+
+  &:hover { border-color: #444; color: #444; }
+
+  &[aria-pressed="true"] {
+    background: rgba(27, 45, 64, 1);
+    color: #fff;
+  }
+}
+
 // Current phrase highlight (audio sync)
 .line.tt-current-phrase {
   background-color: #fff3a3 !important;

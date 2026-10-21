@@ -15576,6 +15576,30 @@ h1, .h1 {
   font-family: monospace;
 }
 
+#loop-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 2px solid rgb(27, 45, 64);
+  border-radius: 50%;
+  background: transparent;
+  color: rgb(27, 45, 64);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+#loop-btn:hover {
+  border-color: #444;
+  color: #444;
+}
+#loop-btn[aria-pressed=true] {
+  background: rgb(27, 45, 64);
+  color: #fff;
+}
+
 .line.tt-current-phrase {
   background-color: #fff3a3 !important;
   scroll-margin-top: 12rem;

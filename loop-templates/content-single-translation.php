@@ -77,6 +77,7 @@ $pad = $logged_in ? 'wp-pad' : '';
 			<div id="player-controls">
 				<button id="play-btn" aria-label="Play">&#9654;</button>
 				<span id="player-time">0:00 / 0:00</span>
+				<button id="loop-btn" type="button" aria-pressed="false" aria-label="Repeat audio" title="Repeat audio">&#8635;</button>
 			</div>
 		</div>
 	<?php endif; ?>
