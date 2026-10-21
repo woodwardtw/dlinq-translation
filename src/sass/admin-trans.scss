@@ -25,3 +25,46 @@
 	width: 300px;
 	margin-top: 8px;
 }
+
+// Line-number gutters for the original/translation textareas (acf-line-numbers.js).
+.dlinq-ln-wrap {
+	display: flex;
+	align-items: stretch;
+
+	textarea {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+}
+
+.dlinq-ln-gutter {
+	flex: 0 0 45px;
+	overflow: hidden;
+	box-sizing: border-box;
+	padding: 0 0.5em;
+	color: #888;
+	font-size: 0.8em;
+	text-align: right;
+	user-select: none;
+}
+
+.dlinq-ln-left .dlinq-ln-gutter {
+	border-right: 1px solid #ddd;
+	margin-right: 0.5em;
+}
+
+.dlinq-ln-right .dlinq-ln-gutter {
+	border-left: 1px solid #ddd;
+	margin-left: 0.5em;
+	text-align: left;
+}
+
+.dlinq-ln-mirror {
+	position: absolute;
+	top: 0;
+	left: -9999px;
+	visibility: hidden;
+	box-sizing: content-box;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}

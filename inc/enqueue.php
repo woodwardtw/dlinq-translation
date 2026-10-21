@@ -81,6 +81,21 @@ function load_translation_admin_style() {
     wp_enqueue_script( 'acf-scroll-sync', get_template_directory_uri() . '/js/acf-scroll-sync.js', array(), '1.0', true );
 }
 
+add_action( 'admin_enqueue_scripts', 'dlinq_acf_line_numbers_scripts' );
+function dlinq_acf_line_numbers_scripts( $hook ) {
+    if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) || 'translation' !== get_current_screen()->post_type ) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'dlinq-acf-line-numbers',
+        get_template_directory_uri() . '/js/acf-line-numbers.js',
+        array(),
+        filemtime( get_template_directory() . '/js/acf-line-numbers.js' ),
+        true
+    );
+}
+
 add_action( 'wp_enqueue_scripts', 'dlinq_markjs_scripts' );
 function dlinq_markjs_scripts() {
     if ( ! is_singular( 'translation' ) ) {
