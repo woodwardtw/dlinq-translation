@@ -37,6 +37,7 @@
 
 .dlinq-ln-gutter {
   flex: 0 0 25px;
+  contain: size;
   overflow: hidden;
   box-sizing: border-box;
   padding: 0 0.5em;

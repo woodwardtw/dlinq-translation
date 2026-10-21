@@ -80,7 +80,15 @@ function initLineNumbers( textarea, side ) {
 		gutter.scrollTop = textarea.scrollTop;
 	} );
 	if ( window.ResizeObserver ) {
-		new ResizeObserver( scheduleRender ).observe( textarea );
+		// Only width changes affect wrapping; ignoring height-only changes keeps
+		// render() from re-triggering itself.
+		var lastWidth = textarea.clientWidth;
+		new ResizeObserver( function() {
+			if ( textarea.clientWidth !== lastWidth ) {
+				lastWidth = textarea.clientWidth;
+				scheduleRender();
+			}
+		} ).observe( textarea );
 	} else {
 		window.addEventListener( 'resize', scheduleRender );
 	}
