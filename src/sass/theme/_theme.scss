@@ -342,11 +342,13 @@ h1{
     display: inline-flex;
     align-items: center;
     font-size: 2rem;
+    font-family: "Cormorant Garamond", serif;
 
     a {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
+      margin-right: 0.5rem;
     }
   }
 

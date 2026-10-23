@@ -15695,11 +15695,13 @@ h1, .h1 {
   display: inline-flex;
   align-items: center;
   font-size: 2rem;
+  font-family: "Cormorant Garamond", serif;
 }
 .participant a {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  margin-right: 0.5rem;
 }
 
 #vtt-adjustment-wrapper h1 small, #vtt-adjustment-wrapper .h1 small, #vtt-adjustment-wrapper h1 .small, #vtt-adjustment-wrapper .h1 .small {

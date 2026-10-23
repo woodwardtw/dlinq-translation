@@ -102,10 +102,14 @@ function dlinq_translation_speaker_primary( $post_id = null, $html = false ) {
 			continue;
 		}
 		$thumb   = get_the_post_thumbnail( $speaker->ID, 'thumbnail', array( 'class' => 'participant-thumb', 'alt' => '' ) );
+		if ( ! $thumb ) {
+			$thumb = '<img class="participant-thumb" src="' . esc_url( get_stylesheet_directory_uri() . '/imgs/weave.png' ) . '" alt="">';
+		}
 		$names[] = '<span class="participant"><a href="' . esc_url( get_permalink( $speaker->ID ) ) . '">'
 			. $thumb . esc_html( $name ) . '</a> ' . esc_html( $tag_text ) . '</span>';
 	}
-	$label = count( $names ) > 1 ? 'Participants:' : 'Participant:';
+	$lable = '';
+	//$label = count( $names ) > 1 ? 'Participants:' : 'Participant:';
 	if ( $html ) {
 		return '<div class="participants"><span class="participants-label">' . $label . '</span> ' . implode( ' ', $names ) . '</div>';
 	}
