@@ -30,7 +30,11 @@ defined( 'ABSPATH' ) || exit;
             <div class="col-md-4">
                 <?php 
                     $image = get_field('bio_photo');
-                    echo '<img class="img-fluid" src="' . esc_url($image['url']) . '" alt="' . esc_attr($image['alt']) . '" />';
+                    if ($image) {
+                        echo '<img class="img-fluid" src="' . esc_url($image['url']) . '" alt="' . esc_attr($image['alt']) . '" />';
+                    } else {
+                        echo '<img class="img-fluid" src="' . esc_url(get_stylesheet_directory_uri() . '/imgs/weave.png') . '" alt="" />';
+                    }
                 ?>
             </div>
             <div class="col-md-8">
