@@ -15704,6 +15704,127 @@ h1, .h1 {
   margin-right: 0.5rem;
 }
 
+.print-only {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 0.6in;
+  }
+  body {
+    background: #fff;
+    color: #000;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  #wrapper-navbar,
+  #wrapper-footer,
+  #wrapper-footer-full,
+  #translation-toolbar,
+  #tt-player,
+  #tt-audio,
+  .entry-thumbnail-banner,
+  .entry-footer,
+  .post-navigation,
+  .skip-link,
+  #comments {
+    display: none !important;
+  }
+  .print-only {
+    display: block;
+  }
+  .single-translation,
+  #single-wrapper .container-fluid,
+  #single-wrapper .container-sm,
+  #single-wrapper .container-md,
+  #single-wrapper .container-lg,
+  #single-wrapper .container-xl,
+  #single-wrapper .container-xxl {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  h1, .h1 {
+    margin: 0 0 0.5rem;
+    font-size: 2.25rem;
+  }
+  .entry-meta {
+    margin: 0 0 1rem;
+  }
+  .participant {
+    font-size: 1.25rem;
+  }
+  .participant-thumb {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  #single-wrapper .row {
+    display: block;
+  }
+  #single-wrapper .row > * {
+    width: 100%;
+    margin-left: 0;
+  }
+  .print-translation {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0 1rem;
+    line-height: 1.4;
+  }
+  .print-translation tr {
+    -moz-column-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .print-translation td {
+    vertical-align: top;
+    padding: 0.2rem 0.4rem;
+  }
+  .print-translation tr.stanza-start td {
+    padding-top: 0.9rem;
+  }
+  .print-translation .print-original {
+    width: 46%;
+    text-align: right;
+  }
+  .print-translation .print-translated {
+    width: 46%;
+  }
+  .print-translation .print-num {
+    width: 8%;
+    text-align: center;
+    color: #888;
+    font-size: 0.8rem;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
+  .trajectory-box,
+  .def-box {
+    -moz-column-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .print-qr {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    -moz-column-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .print-qr svg {
+    width: 1.1in;
+    height: 1.1in;
+  }
+  .print-qr p {
+    margin: 0;
+    font-size: 0.85rem;
+    word-break: break-all;
+  }
+}
 #vtt-adjustment-wrapper h1 small, #vtt-adjustment-wrapper .h1 small, #vtt-adjustment-wrapper h1 .small, #vtt-adjustment-wrapper .h1 .small {
   font-size: 1rem;
   font-weight: normal;
@@ -15950,5 +16071,4 @@ h1, .h1 {
   color: #c00;
   font-weight: bold;
 }
-
 /*# sourceMappingURL=theme.css.map */

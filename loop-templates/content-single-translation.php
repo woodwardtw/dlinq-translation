@@ -76,15 +76,18 @@ if ( $has_vtt ) {
   				<div class="col-md-12">
   					<?php echo dlinq_translation_legend();?>
   				</div>
-  				<div class="col-md-6">
+  				<div class="col-md-6 d-print-none">
       				<div class="original text-box<?php echo $has_vtt ? ' tt-transcript' : ''; ?>"<?php echo $has_vtt ? ' data-tt-media-urls="' . esc_url( $audio_url ) . '"' : ''; ?>>
       					<?php echo dlinq_translation( 'original_text', $has_vtt ? ' tt-phrase' : '' );?>
       				</div>
       			</div>
-      			<div class="col-md-6">
+      			<div class="col-md-6 d-print-none">
       				<div class="translated text-box">
       					<?php echo dlinq_translation('translation');?>
       				</div>
+      			</div>
+      			<div class="col-12 print-only">
+      				<table class="print-translation" id="print-translation"></table>
       			</div>
 				
 				<?php $trajectory = get_field( 'text_trajectory' ); ?>
@@ -107,6 +110,11 @@ if ( $has_vtt ) {
 
 	</div><!-- .entry-content -->
 
+	<div class="print-only print-qr" aria-hidden="true">
+		<div id="print-qr-code" data-url="<?php echo esc_url( get_permalink() ); ?>"></div>
+		<p>Listen and read online:<br><?php echo esc_html( get_permalink() ); ?></p>
+	</div>
+
 	<footer class="entry-footer">
 
 		<?php understrap_entry_footer(); ?>
@@ -123,16 +131,15 @@ if ( $has_vtt ) {
 				<button class="btn btn-outline-secondary" type="button" id="translation-search-clear" aria-label="Clear search">&#x2715;</button>
 			</div>
 		</div>
-		<?php if ( $has_audio || $has_vtt ) : ?>
-			<div class="translation-downloads">
-				<?php if ( $has_audio ) : ?>
-					<a class="btn btn-primary" href="<?php echo esc_url( $audio_url ); ?>" download id="download-audio">Download audio file</a>
-				<?php endif; ?>
-				<?php if ( $has_vtt ) : ?>
-					<a class="btn btn-primary" href="<?php echo esc_url( $vtt_url ); ?>" download id="download-vtt">Download VTT file</a>
-				<?php endif; ?>
-			</div>
-		<?php endif; ?>
+		<div class="translation-downloads">
+			<button class="btn btn-primary" type="button" id="download-pdf">Download PDF</button>
+			<?php if ( $has_audio ) : ?>
+				<a class="btn btn-primary" href="<?php echo esc_url( $audio_url ); ?>" download id="download-audio">Download audio file</a>
+			<?php endif; ?>
+			<?php if ( $has_vtt ) : ?>
+				<a class="btn btn-primary" href="<?php echo esc_url( $vtt_url ); ?>" download id="download-vtt">Download VTT file</a>
+			<?php endif; ?>
+		</div>
 	</div><!-- #translation-toolbar -->
 
 </article><!-- #post-<?php the_ID(); ?> -->

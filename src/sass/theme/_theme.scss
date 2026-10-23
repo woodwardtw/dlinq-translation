@@ -353,6 +353,147 @@ h1{
   }
 
 
+// ── Print / Download PDF ─────────────────────────────────────────────────────
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 0.6in;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    // Keep the highlight-word colors in the PDF
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #wrapper-navbar,
+  #wrapper-footer,
+  #wrapper-footer-full,
+  #translation-toolbar,
+  #tt-player,
+  #tt-audio,
+  .entry-thumbnail-banner,
+  .entry-footer,
+  .post-navigation,
+  .skip-link,
+  #comments {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  .single-translation,
+  #single-wrapper .container-fluid {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  h1 {
+    margin: 0 0 0.5rem;
+    font-size: 2.25rem;
+  }
+
+  .entry-meta {
+    margin: 0 0 1rem;
+  }
+
+  .participant {
+    font-size: 1.25rem;
+  }
+
+  .participant-thumb {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  // Links print as plain text
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  // Chrome clips flex rows that span pages, so lay them out as plain blocks
+  #single-wrapper .row {
+    display: block;
+  }
+
+  #single-wrapper .row > * {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  // Original and translation paired line by line (built in translation-print.js)
+  .print-translation {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0 1rem;
+    line-height: 1.4;
+
+    tr {
+      break-inside: avoid;
+    }
+
+    td {
+      vertical-align: top;
+      padding: 0.2rem 0.4rem;
+    }
+
+    tr.stanza-start td {
+      padding-top: 0.9rem;
+    }
+
+    .print-original {
+      width: 46%;
+      text-align: right;
+    }
+
+    .print-translated {
+      width: 46%;
+    }
+
+    .print-num {
+      width: 8%;
+      text-align: center;
+      color: #888;
+      font-size: 0.8rem;
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+    }
+  }
+
+  .trajectory-box,
+  .def-box {
+    break-inside: avoid;
+  }
+
+  .print-qr {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    break-inside: avoid;
+
+    svg {
+      width: 1.1in;
+      height: 1.1in;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+      word-break: break-all;
+    }
+  }
+}
+
 // ── VTT Adjustment tool ──────────────────────────────────────────────────────
 
 #vtt-adjustment-wrapper {
