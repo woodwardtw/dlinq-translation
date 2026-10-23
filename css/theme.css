@@ -15531,6 +15531,10 @@ h1, .h1 {
   gap: 0.5rem;
 }
 
+.btn-primary, input#translation-search-input, #translation-search-clear {
+  border-radius: 0;
+}
+
 .single-translation {
   padding-bottom: 80px;
 }

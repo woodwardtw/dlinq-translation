@@ -179,6 +179,12 @@ h1{
   gap: 0.5rem;
 }
 
+//un-rounding things
+
+.btn-primary, input#translation-search-input, #translation-search-clear {
+    border-radius: 0;
+}
+
 // Keep page content clear of the fixed toolbar
 .single-translation {
   padding-bottom: 80px;
