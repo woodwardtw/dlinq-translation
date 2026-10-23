@@ -15675,6 +15675,33 @@ h1, .h1 {
   font-weight: bold;
 }
 
+.participants {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.participant-thumb {
+  -o-object-fit: cover;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgb(27, 45, 64);
+  width: 4rem;
+  height: 4rem;
+}
+
+.participant {
+  display: inline-flex;
+  align-items: center;
+  font-size: 2rem;
+}
+.participant a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 #vtt-adjustment-wrapper h1 small, #vtt-adjustment-wrapper .h1 small, #vtt-adjustment-wrapper h1 .small, #vtt-adjustment-wrapper .h1 .small {
   font-size: 1rem;
   font-weight: normal;

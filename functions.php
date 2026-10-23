@@ -82,7 +82,8 @@ function custom_upload_mimes( $existing_mimes ) {
 }
 add_filter( 'upload_mimes', 'custom_upload_mimes' );
 
-function dlinq_translation_speaker_primary( $post_id = null ) {
+// Pass $html = true for linked names with thumbnails; default stays plain text for the podcast feed.
+function dlinq_translation_speaker_primary( $post_id = null, $html = false ) {
 	$speakers = get_field( 'speaker', $post_id );
 	if ( ! $speakers ) {
 		return '';
@@ -91,13 +92,23 @@ function dlinq_translation_speaker_primary( $post_id = null ) {
 	foreach ( $speakers as $speaker ) {
 		$name = get_the_title( $speaker->ID );
 		$tags = get_the_terms( $speaker->ID, 'post_tag' );
+		$tag_text = '';
 		if ( $tags && ! is_wp_error( $tags ) ) {
 			$tag_names = wp_list_pluck( $tags, 'name' );
-			$name     .= ' (' . implode( ', ', $tag_names ) . ')';
+			$tag_text  = ' (' . implode( ', ', $tag_names ) . ')';
 		}
-		$names[] = $name;
+		if ( ! $html ) {
+			$names[] = $name . $tag_text;
+			continue;
+		}
+		$thumb   = get_the_post_thumbnail( $speaker->ID, 'thumbnail', array( 'class' => 'participant-thumb', 'alt' => '' ) );
+		$names[] = '<span class="participant"><a href="' . esc_url( get_permalink( $speaker->ID ) ) . '">'
+			. $thumb . esc_html( $name ) . '</a> ' . esc_html( $tag_text ) . '</span>';
 	}
 	$label = count( $names ) > 1 ? 'Participants:' : 'Participant:';
+	if ( $html ) {
+		return '<div class="participants"><span class="participants-label">' . $label . '</span> ' . implode( ' ', $names ) . '</div>';
+	}
 	return $label . ' ' . implode( ', ', $names );
 }
 
@@ -118,3 +129,44 @@ function dlinq_translation_speaker_query_loop( $query, $block, $page ) {
 	return $query;
 }
 add_filter( 'query_loop_block_query_vars', 'dlinq_translation_speaker_query_loop', 10, 3 );
+/**
+ * Keep a Speaker's featured image in sync with its ACF bio_photo field.
+ * ACF stores the raw attachment ID in post meta regardless of return format.
+ */
+function dlinq_translation_sync_bio_photo( $post_id ) {
+	if ( 'speaker' !== get_post_type( $post_id ) || wp_is_post_revision( $post_id ) ) {
+		return;
+	}
+
+	$photo_id = (int) get_post_meta( $post_id, 'bio_photo', true );
+	if ( $photo_id ) {
+		set_post_thumbnail( $post_id, $photo_id );
+	} else {
+		delete_post_thumbnail( $post_id );
+	}
+}
+add_action( 'acf/save_post', 'dlinq_translation_sync_bio_photo', 20 );
+
+// One-time backfill for Speakers saved before the sync existed.
+function dlinq_translation_backfill_bio_photos() {
+	if ( get_option( 'dlinq_bio_photo_backfilled' ) ) {
+		return;
+	}
+
+	$speaker_ids = get_posts( array(
+		'post_type'      => 'speaker',
+		'post_status'    => 'any',
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+	) );
+	// Only set, never clear, so manually chosen featured images survive.
+	foreach ( $speaker_ids as $speaker_id ) {
+		$photo_id = (int) get_post_meta( $speaker_id, 'bio_photo', true );
+		if ( $photo_id ) {
+			set_post_thumbnail( $speaker_id, $photo_id );
+		}
+	}
+
+	update_option( 'dlinq_bio_photo_backfilled', 1 );
+}
+add_action( 'admin_init', 'dlinq_translation_backfill_bio_photos' );

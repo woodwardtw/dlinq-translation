@@ -32,7 +32,7 @@ if ( $has_vtt ) {
 			<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 			<div class="entry-meta">
 				<?php 
-					echo dlinq_translation_speaker_primary();
+					echo dlinq_translation_speaker_primary( null, true );
 					//understrap_posted_on(); ?>
 			</div><!-- .entry-meta -->
 		</div>
@@ -86,38 +86,7 @@ if ( $has_vtt ) {
       					<?php echo dlinq_translation('translation');?>
       				</div>
       			</div>
-				<div class="col-md-6 offset-md-3 ">
-					<?php $speakers = get_field( 'speaker' ); ?>
-					<?php if ( $speakers ) : ?>
-						<div class="speaker-box">
-							<h2><?php echo count( $speakers ) === 1 ? 'Participant' : 'Participants'; ?></h2>
-							<?php foreach ( $speakers as $speaker ) : ?>
-								<?php
-								$post_id   = $speaker->ID;
-								$image     = get_field( 'bio_photo', $post_id );
-								$tags      = get_the_terms( $post_id, 'post_tag' );
-								$tag_names = ( $tags && ! is_wp_error( $tags ) ) ? wp_list_pluck( $tags, 'name' ) : array();
-								?>
-								<div class="speaker row">
-									<?php if ( $image ) : ?>
-										<div class="col-md-3">
-											<img class="img-fluid" src="<?php echo esc_url( $image['sizes']['thumbnail'] ); ?>" alt="<?php echo esc_attr( $image['alt'] ); ?>">
-										</div>
-									<?php endif; ?>
-									<div class="col-md-9">
-										<a href="<?php echo get_permalink( $post_id ); ?>" class="speaker-name"><?php echo get_the_title( $post_id ); ?></a>
-										<?php if ( $tag_names ) : ?>
-											<span class="speaker-tags">(<?php echo esc_html( implode( ', ', $tag_names ) ); ?>)</span>
-										<?php endif; ?>
-										<?php echo get_field( 'biography', $post_id ); ?>
-									</div>
-								</div>
-							<?php endforeach; ?>
-						</div>
-					<?php else : ?>
-						<p>No speakers.</p>
-					<?php endif; ?>
-				</div>
+				
 				<?php $trajectory = get_field( 'text_trajectory' ); ?>
 				<?php if ( $trajectory ) : ?>
 					<div class="col-md-6 offset-md-3">
