@@ -22,8 +22,6 @@ if ( $has_vtt ) {
 	$vtt_url           = add_query_arg( 'v', $vtt_mtime, $vtt_url );
 }
 
-$logged_in = is_user_logged_in();
-$pad = $logged_in ? 'wp-pad' : '';
 ?>
 
 <article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
@@ -37,16 +35,6 @@ $pad = $logged_in ? 'wp-pad' : '';
 					echo dlinq_translation_speaker_primary();
 					//understrap_posted_on(); ?>
 			</div><!-- .entry-meta -->
-		</div>
-
-		<div class="translation-search <?php echo $pad;?>" id="translation-search">
-			<div class="input-group">
-				<input type="search" id="translation-search-input" class="form-control" placeholder="Search this story . . . " aria-label="Search translation text">
-				<span class="input-group-text" id="translation-search-count" aria-live="polite"></span>
-				<button data-search="next">&darr;</button>
-  				<button data-search="prev">&uarr;</button>
-				<button class="btn btn-outline-secondary" type="button" id="translation-search-clear" aria-label="Clear search">&#x2715;</button>
-			</div>
 		</div>
 
 	</header><!-- .entry-header -->
@@ -80,9 +68,6 @@ $pad = $logged_in ? 'wp-pad' : '';
 				<button id="loop-btn" type="button" aria-pressed="false" aria-label="Repeat audio" title="Repeat audio">&#8635;</button>
 			</div>
 		</div>
-	<?php endif; ?>
-	<?php if ( $has_vtt ) : ?>
-		<a class="btn btn-primary" href="<?php echo esc_url( $vtt_url ); ?>" download id="download-vtt">Download VTT file</a>
 	<?php endif; ?>
 
 	<!--translation display-->
@@ -158,5 +143,27 @@ $pad = $logged_in ? 'wp-pad' : '';
 		<?php understrap_entry_footer(); ?>
 
 	</footer><!-- .entry-footer -->
+
+	<div class="translation-toolbar" id="translation-toolbar">
+		<div class="translation-search" id="translation-search">
+			<div class="input-group">
+				<input type="search" id="translation-search-input" class="form-control" placeholder="Search this story . . . " aria-label="Search translation text">
+				<span class="input-group-text" id="translation-search-count" aria-live="polite"></span>
+				<button class="btn btn-outline-secondary" type="button" data-search="next" aria-label="Next match">&darr;</button>
+				<button class="btn btn-outline-secondary" type="button" data-search="prev" aria-label="Previous match">&uarr;</button>
+				<button class="btn btn-outline-secondary" type="button" id="translation-search-clear" aria-label="Clear search">&#x2715;</button>
+			</div>
+		</div>
+		<?php if ( $has_audio || $has_vtt ) : ?>
+			<div class="translation-downloads">
+				<?php if ( $has_audio ) : ?>
+					<a class="btn btn-primary" href="<?php echo esc_url( $audio_url ); ?>" download id="download-audio">Download audio file</a>
+				<?php endif; ?>
+				<?php if ( $has_vtt ) : ?>
+					<a class="btn btn-primary" href="<?php echo esc_url( $vtt_url ); ?>" download id="download-vtt">Download VTT file</a>
+				<?php endif; ?>
+			</div>
+		<?php endif; ?>
+	</div><!-- #translation-toolbar -->
 
 </article><!-- #post-<?php the_ID(); ?> -->

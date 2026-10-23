@@ -15504,16 +15504,42 @@ h1, .h1 {
   flex: 19;
 }
 
-#translation-search {
+#translation-toolbar {
   position: fixed;
+  left: 0;
   right: 0;
+  bottom: 0;
   z-index: 10000;
-  top: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   background-color: #efefef;
-  padding: 10px;
-  border: 1px solid #ddd;
+  padding: 10px 16px;
+  border-top: 1px solid #ddd;
 }
 
+#translation-search {
+  flex: 1 1 320px;
+  max-width: 500px;
+}
+
+.translation-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.single-translation {
+  padding-bottom: 80px;
+}
+
+@media screen and (max-width: 575px) {
+  .single-translation {
+    padding-bottom: 130px;
+  }
+}
 .nav-link {
   color: rgb(245, 245, 245);
   font-size: 1.1rem;
