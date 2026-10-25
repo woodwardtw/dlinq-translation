@@ -40,9 +40,9 @@ if ( $has_vtt ) {
 	</header><!-- .entry-header -->
 
 	<?php
-	$thumbnail_id  = get_post_thumbnail_id( $post->ID );
-	$thumbnail_url = get_the_post_thumbnail_url( $post->ID, 'thumbnail' );
-	$thumbnail_alt = $thumbnail_id ? get_post_meta( $thumbnail_id, '_wp_attachment_image_alt', true ) : '';
+		$thumbnail_id  = get_post_thumbnail_id( $post->ID );
+		$thumbnail_url = get_the_post_thumbnail_url( $post->ID, 'thumbnail' );
+		$thumbnail_alt = $thumbnail_id ? get_post_meta( $thumbnail_id, '_wp_attachment_image_alt', true ) : '';
 	?>
 	<?php if ( $thumbnail_url ) : ?>
 		<?php if ( $thumbnail_alt ) : ?>
