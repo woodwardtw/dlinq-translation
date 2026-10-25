@@ -15360,7 +15360,7 @@ figure.woocommerce-product-gallery__wrapper {
 }
 
 body {
-  background: rgb(255, 254, 247);
+  background: rgb(255, 255, 255);
   color: rgb(27, 45, 64);
 }
 
@@ -15558,7 +15558,7 @@ h1, .h1 {
   position: sticky;
   top: 0;
   z-index: 200;
-  background: rgba(255, 254, 247, 0.97);
+  background: rgb(255, 255, 255);
   padding: 0.5rem 1rem;
   border-bottom: 1px solid #ddd;
   margin-bottom: 1rem;
@@ -15848,7 +15848,7 @@ h1, .h1 {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 254, 247, 0.97);
+  background: rgb(255, 255, 255);
   padding: 0.5rem 0;
   margin: 0 0 0.5rem;
   border-bottom: 1px solid #ddd;
@@ -16071,4 +16071,5 @@ h1, .h1 {
   color: #c00;
   font-weight: bold;
 }
+
 /*# sourceMappingURL=theme.css.map */

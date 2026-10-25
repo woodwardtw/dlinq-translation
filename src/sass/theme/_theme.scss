@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap');
 
 body {
-  background: rgba(255,254,247,1);
+  background: $background;
   color: rgba(27,45,64,1);
 }
 
@@ -211,7 +211,7 @@ h1{
   position: sticky;
   top: 0;
   z-index: 200;
-  background: rgba(255, 254, 247, 0.97);
+  background: $background;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid #ddd;
   margin-bottom: 1rem;
@@ -520,7 +520,7 @@ h1{
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 254, 247, 0.97);
+  background: $background;
   padding: 0.5rem 0;
   margin: 0 0 0.5rem;
   border-bottom: 1px solid #ddd;
