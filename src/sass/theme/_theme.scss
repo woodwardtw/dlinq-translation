@@ -724,3 +724,29 @@ h1{
     font-weight: bold;
   }
 }
+// People block (ACF people_block on pages)
+.people-block {
+  margin-top: 2rem;
+
+  .people-group {
+    margin-bottom: 2.5rem;
+  }
+
+  .people-group-descriptor {
+    margin-bottom: 1.5rem;
+  }
+
+  .person {
+    margin-bottom: 1.5rem;
+  }
+
+  .person-photo img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  .person-info h3 {
+    margin-top: 0;
+  }
+}

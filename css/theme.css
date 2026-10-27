@@ -16072,4 +16072,26 @@ h1, .h1 {
   font-weight: bold;
 }
 
+.people-block {
+  margin-top: 2rem;
+}
+.people-block .people-group {
+  margin-bottom: 2.5rem;
+}
+.people-block .people-group-descriptor {
+  margin-bottom: 1.5rem;
+}
+.people-block .person {
+  margin-bottom: 1.5rem;
+}
+.people-block .person-photo img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+.people-block .person-info h3, .people-block .person-info .h3 {
+  margin-top: 0;
+}
+
 /*# sourceMappingURL=theme.css.map */

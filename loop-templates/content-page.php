@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php
 		the_content();
+		echo dlinq_people_block();
 		understrap_link_pages();
 		?>
 

@@ -512,3 +512,68 @@ function dlinq_backfill_speaker_taxonomy() {
 
 	update_option( 'dlinq_speaker_tax_backfilled', 1 );
 }
+
+// Display the people_block repeater (groups of speakers) on pages.
+function dlinq_people_block() {
+	if ( ! have_rows( 'people_block' ) ) {
+		return '';
+	}
+
+	$html = '';
+	while ( have_rows( 'people_block' ) ) : the_row();
+		$title      = get_sub_field( 'people_group_title' );
+		$descriptor = get_sub_field( 'people_group_descriptor' );
+		$people     = get_sub_field( 'people' );
+
+		if ( ! $title && ! $descriptor && ! $people ) {
+			continue;
+		}
+
+		$html .= "<section class='people-group'>";
+		if ( $title ) {
+			$html .= '<h2>' . esc_html( $title ) . '</h2>';
+		}
+		if ( $descriptor ) {
+			$html .= "<div class='people-group-descriptor'>{$descriptor}</div>";
+		}
+
+		if ( $people ) {
+			foreach ( $people as $person ) {
+				$html .= dlinq_people_block_person( $person );
+			}
+		}
+		$html .= '</section>';
+	endwhile;
+
+	return $html ? "<div class='people-block'>{$html}</div>" : '';
+}
+
+function dlinq_people_block_person( $person ) {
+	$image = get_field( 'bio_photo', $person->ID );
+	if ( $image ) {
+		$src = $image['sizes']['medium'] ?? $image['url'];
+		$alt = $image['alt'];
+	} elseif ( has_post_thumbnail( $person->ID ) ) {
+		$src = get_the_post_thumbnail_url( $person->ID, 'medium' );
+		$alt = get_post_meta( get_post_thumbnail_id( $person->ID ), '_wp_attachment_image_alt', true );
+	} else {
+		$src = get_stylesheet_directory_uri() . '/imgs/weave.png';
+		$alt = '';
+	}
+
+	$link = esc_url( get_permalink( $person->ID ) );
+	$name = esc_html( get_the_title( $person->ID ) );
+	$bio  = get_field( 'biography', $person->ID );
+
+	return "
+		<div class='person row'>
+			<div class='col-md-3 person-photo'>
+				<img class='img-fluid' src='" . esc_url( $src ) . "' alt='" . esc_attr( $alt ) . "' />
+			</div>
+			<div class='col-md-9 person-info'>
+				<h3><a href='{$link}'>{$name}</a></h3>
+				<div class='person-bio'>{$bio}</div>
+			</div>
+		</div>
+	";
+}
