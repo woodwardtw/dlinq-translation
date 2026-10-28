@@ -577,3 +577,9 @@ function dlinq_people_block_person( $person ) {
 		</div>
 	";
 }
+
+// Register the people_block display as an ACF block so it can be placed in the block editor.
+add_action( 'init', 'dlinq_register_people_block' );
+function dlinq_register_people_block() {
+	register_block_type( get_stylesheet_directory() . '/blocks/people-block' );
+}

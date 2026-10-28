@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "acf/people-block",
+	"title": "People Block",
+	"description": "Groups of participants with photo, name and biography.",
+	"category": "theme",
+	"icon": "groups",
+	"keywords": [ "people", "participants", "speakers" ],
+	"supports": {
+		"anchor": true,
+		"align": false
+	},
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php"
+	}
+}
